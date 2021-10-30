@@ -17,47 +17,49 @@ import com.tealiumlabs.ecommercec.ui.screen.home.HomeViewModel
 @Composable
 fun EcommApp(splashScreenVisibleCondition: (SplashScreen.KeepOnScreenCondition) -> Unit) {
 
-    val context = LocalContext.current
-    var isOnline by remember { mutableStateOf(checkIfOnline(context)) }
+//    val context = LocalContext.current
+//    var isOnline by remember { mutableStateOf(checkIfOnline(context)) }
 
-    if (isOnline) {
+    //if (isOnline) {
         val viewModel: HomeViewModel = viewModel()
         splashScreenVisibleCondition {
             //viewModel.state.value.run {
             //    petState.loading || specialNeedsDogState.loading
             //}
-            dummy1()
+            LoadComplete()
         }
+
         EcommNavigation(viewModel)
-    } else {
-        OfflineDialog { isOnline = checkIfOnline(context) }
-    }
+
+//    } else {
+//        OfflineDialog { isOnline = checkIfOnline(context) }
+//    }
 
 }
 
-// dummy function
-fun dummy1(): Boolean {
+// Load Complete function
+fun LoadComplete(): Boolean {
    return false
 }
 
 
-@Composable
-fun OfflineDialog(onRetry: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = {},
-        title = { Text(text = "No Internet") },
-        text = { Text(text = "No internet connection. Turn on Wifi or mobile data.") },
-        confirmButton = {
-            TextButton(onClick = onRetry) {
-                Text("Retry")
-            }
-        }
-    )
-}
-
-@Suppress("DEPRECATION")
-private fun checkIfOnline(context: Context): Boolean {
-    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetwork = cm.activeNetworkInfo
-    return activeNetwork?.isConnectedOrConnecting == true
-}
+//@Composable
+//fun OfflineDialog(onRetry: () -> Unit) {
+//    AlertDialog(
+//        onDismissRequest = {},
+//        title = { Text(text = "No Internet") },
+//        text = { Text(text = "No internet connection. Turn on Wifi or mobile data.") },
+//        confirmButton = {
+//            TextButton(onClick = onRetry) {
+//                Text("Retry")
+//            }
+//        }
+//    )
+//}
+//
+//@Suppress("DEPRECATION")
+//private fun checkIfOnline(context: Context): Boolean {
+//    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//    val activeNetwork = cm.activeNetworkInfo
+//    return activeNetwork?.isConnectedOrConnecting == true
+//}

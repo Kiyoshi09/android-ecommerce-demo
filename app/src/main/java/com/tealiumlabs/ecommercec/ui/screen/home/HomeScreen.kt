@@ -17,11 +17,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -48,43 +50,86 @@ import com.tealiumlabs.ecommercec.ui.theme.EcommTypography
 fun HomeScreen(
     vieModel: ViewModel,
     navController: NavController,
-){
+) {
     Scaffold(
         topBar = {
-            HomeScreenTopAppBar(darkTheme = isSystemInDarkTheme())
+            HomeScreenTopAppBar(
+                navController = navController
+            )
         },
         content = {
             HomeScreenContent()
+        },
+        bottomBar = {
+            HomeScreenBottomBar(
+                navController = navController
+            )
         }
     )
 }
 
 @Composable
 fun HomeScreenTopAppBar(
-    darkTheme: Boolean
+    navController: NavController,
 ) {
-    Column {
-        TopAppBar(
-            title = {
-                Text(
-                    "Tealium Commerce",
-                    Modifier.padding(100.dp,0.dp,0.dp,0.dp),
-                    style = EcommTypography.h6
-                )
-            },
-            backgroundColor = MaterialTheme.colors.surface,
-            elevation = 0.dp,
-            actions = {
-                IconButton(onClick = { }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_cart),
-                        contentDescription = "Cart",
-                        tint = MaterialTheme.colors.onSurface
-                    )
-                }
-            }
+    Row(
+        Modifier.fillMaxWidth()
+            .padding(0.dp, 10.dp, 10.dp, 0.dp),
+        horizontalArrangement = Arrangement.End
+    ) {
+        Text(
+            text = "Tealium Commerce",
+            Modifier.padding(0.dp, 10.dp, 60.dp, 0.dp),
+            style = EcommTypography.h6
         )
+
+        IconButton(onClick = {
+            navController.navigate(Screen.Cart.route) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_cart),
+                contentDescription = "Cart",
+                tint = MaterialTheme.colors.onSurface,
+            )
+        }
     }
+
+//    Column {
+//        TopAppBar(
+//            title = {
+//                Text(
+//                    "Tealium Commerce",
+//                    Modifier.padding(100.dp, 0.dp, 0.dp, 0.dp),
+//                    style = EcommTypography.h6
+//                )
+//            },
+//            backgroundColor = MaterialTheme.colors.surface,
+//            elevation = 0.dp,
+//            actions = {
+//                IconButton(onClick = {
+//                    navController.navigate(Screen.Cart.route) {
+//                        popUpTo(navController.graph.findStartDestination().id) {
+//                            saveState = true
+//                        }
+//                        launchSingleTop = true
+//                        restoreState = true
+//                    }
+//                }) {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.ic_cart),
+//                        contentDescription = "Cart",
+//                        tint = MaterialTheme.colors.onSurface
+//                    )
+//                }
+//            }
+//        )
+//    }
 }
 
 
@@ -93,15 +138,17 @@ fun HomeScreenContent() {
 
     Column {
 
-        GlobalSearch()
+        //GlobalSearch()
 
         CategoryTabs()
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun GlobalSearch() {
-    var qry by remember{ mutableStateOf("") }
+    var qry by remember { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Surface(
         elevation = 0.dp,
@@ -109,7 +156,7 @@ fun GlobalSearch() {
     ) {
         Row(
             modifier = Modifier.fillMaxWidth()
-        ){
+        ) {
             OutlinedTextField(
                 value = qry,
                 onValueChange = { qry = it },
@@ -118,11 +165,18 @@ fun GlobalSearch() {
                     .padding(16.dp, 0.dp, 16.dp, 8.dp),
                 shape = RoundedCornerShape(20.dp),
                 label = {
-                    Text("Search")
+                    Text(text = "Search")
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                   onSearch = {
+                       Log.i("Kiyoshi","Search : ${qry}")
+
+                       keyboardController?.hide()
+                   }
                 ),
                 leadingIcon = {
                     Icon(
@@ -131,7 +185,7 @@ fun GlobalSearch() {
                         tint = MaterialTheme.colors.onSurface
                     )
                 },
-                singleLine = true
+                singleLine = true,
             )
         }
     }
@@ -140,8 +194,8 @@ fun GlobalSearch() {
 @Composable
 fun CategoryTabs() {
 
-    val categoryList = listOf("ALL","WOMEN","MEN","ACCESSORIES","HOME & DECOR","SALE","VIP")
-    var selectedIndex by remember{ mutableStateOf(0)}
+    val categoryList = listOf("ALL", "WOMEN", "MEN", "ACCESSORIES", "HOME & DECOR", "SALE", "VIP")
+    var selectedIndex by remember { mutableStateOf(0) }
 
     ScrollableTabRow(
         selectedTabIndex = selectedIndex,
@@ -172,7 +226,7 @@ fun CategoryChip(
     categoryName: String,
     selected: Boolean,
     modifier: Modifier = Modifier
-){
+) {
     Surface(
         color = when {
             selected -> MaterialTheme.colors.primary
@@ -190,6 +244,31 @@ fun CategoryChip(
             style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Medium),
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
+    }
+}
+
+@Composable
+fun HomeScreenBottomBar(navController: NavController) {
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry?.destination
+
+    BottomNavigation {
+        Screen.getBottomTabScreens().forEach { screen ->
+            BottomNavigationItem(
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = { Icon(screen.icon, screen.title) },
+                label = { Text(screen.title) }
+            )
+        }
     }
 }
 
