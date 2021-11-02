@@ -2,26 +2,33 @@ package com.tealiumlabs.ecommercec.ui.screen.home
 
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -31,9 +38,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -41,14 +51,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.tealiumlabs.ecommercec.R
+import com.tealiumlabs.ecommercec.data.repositories.SweetsCategory
+import com.tealiumlabs.ecommercec.model.SweetsAd
+import com.tealiumlabs.ecommercec.ui.components.ECommcSurface
 import com.tealiumlabs.ecommercec.ui.navigation.Screen
 import com.tealiumlabs.ecommercec.ui.theme.ECommerceCTheme
 import com.tealiumlabs.ecommercec.ui.theme.EcommTypography
 
 @Composable
 fun HomeScreen(
-    vieModel: ViewModel,
+    viewModel: HomeViewModel,
     navController: NavController,
 ) {
     Scaffold(
@@ -58,7 +73,7 @@ fun HomeScreen(
             )
         },
         content = {
-            HomeScreenContent()
+            HomeScreenContent(viewModel = viewModel)
         },
         bottomBar = {
             HomeScreenBottomBar(
@@ -73,7 +88,8 @@ fun HomeScreenTopAppBar(
     navController: NavController,
 ) {
     Row(
-        Modifier.fillMaxWidth()
+        Modifier
+            .fillMaxWidth()
             .padding(0.dp, 10.dp, 10.dp, 0.dp),
         horizontalArrangement = Arrangement.End
     ) {
@@ -95,7 +111,7 @@ fun HomeScreenTopAppBar(
             Icon(
                 painter = painterResource(id = R.drawable.ic_cart),
                 contentDescription = "Cart",
-                tint = MaterialTheme.colors.onSurface,
+                tint = colors.onSurface,
             )
         }
     }
@@ -134,13 +150,15 @@ fun HomeScreenTopAppBar(
 
 
 @Composable
-fun HomeScreenContent() {
+fun HomeScreenContent(viewModel: HomeViewModel) {
 
     Column {
 
         //GlobalSearch()
 
         CategoryTabs()
+
+        BodyContents(viewModel = viewModel)
     }
 }
 
@@ -172,17 +190,17 @@ fun GlobalSearch() {
                     imeAction = ImeAction.Search
                 ),
                 keyboardActions = KeyboardActions(
-                   onSearch = {
-                       Log.i("Kiyoshi","Search : ${qry}")
+                    onSearch = {
+                        Log.i("Kiyoshi", "Search : ${qry}")
 
-                       keyboardController?.hide()
-                   }
+                        keyboardController?.hide()
+                    }
                 ),
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_search),
                         contentDescription = "Search",
-                        tint = MaterialTheme.colors.onSurface
+                        tint = colors.onSurface
                     )
                 },
                 singleLine = true,
@@ -194,24 +212,23 @@ fun GlobalSearch() {
 @Composable
 fun CategoryTabs() {
 
-    val categoryList = listOf("ALL", "WOMEN", "MEN", "ACCESSORIES", "HOME & DECOR", "SALE", "VIP")
     var selectedIndex by remember { mutableStateOf(0) }
 
     ScrollableTabRow(
         selectedTabIndex = selectedIndex,
         edgePadding = 16.dp,
-        backgroundColor = MaterialTheme.colors.background,
+        backgroundColor = colors.background,
         divider = {},
         indicator = {}
     ) {
-        categoryList.forEachIndexed { index, category ->
+        SweetsCategory.getSweetsCategoryList().forEachIndexed { index, category ->
             Tab(
                 selected = index == selectedIndex,
                 onClick = { selectedIndex = index }
             )
             {
                 CategoryChip(
-                    categoryName = category,
+                    categoryName = category.title,
                     selected = index == selectedIndex,
                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 16.dp)
                 )
@@ -227,23 +244,25 @@ fun CategoryChip(
     selected: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        color = when {
-            selected -> MaterialTheme.colors.primary
-            else -> MaterialTheme.colors.onBackground.copy(alpha = 0.12f)
-        },
-        contentColor = when {
-            selected -> MaterialTheme.colors.onPrimary
-            else -> MaterialTheme.colors.onBackground
-        },
-        shape = RoundedCornerShape(40),
-        modifier = modifier
-    ) {
-        Text(
-            text = categoryName,
-            style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Medium),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        )
+    ECommerceCTheme {
+        Surface(
+            color = when {
+                selected -> colors.primary
+                else -> colors.onBackground.copy(alpha = 0.12f)
+            },
+            contentColor = when {
+                selected -> colors.onPrimary
+                else -> colors.onBackground
+            },
+            shape = RoundedCornerShape(40),
+            modifier = modifier
+        ) {
+            Text(
+                text = categoryName,
+                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Medium),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
     }
 }
 
@@ -269,6 +288,111 @@ fun HomeScreenBottomBar(navController: NavController) {
                 label = { Text(screen.title) }
             )
         }
+    }
+}
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+fun BodyContents(viewModel: HomeViewModel) {
+
+    Box {
+        LazyColumn {
+            item {
+
+//                LazyRow {
+//                    itemsIndexed(viewModel.sweetsAdList) { index, sweetsAd ->
+//                        val painter = rememberImagePainter(
+//                            data = sweetsAd.imageUrl,
+//                            builder = {
+//                                crossfade(true)
+//                                placeholder(drawableResId = R.drawable.plate_placeholder)
+//                            },
+//                        )
+//
+//                        Image(
+//                            painter = painter,
+//                            contentDescription = sweetsAd.name,
+//                            modifier = Modifier.size(280.dp),
+//                            contentScale = ContentScale.Crop
+//                        )
+//                    }
+//                }
+
+                LazyRow {
+                    itemsIndexed(viewModel.sweetsAdList) { index, sweetsAd ->
+                        SweetsAdItem(
+                            sweetsAd = sweetsAd
+                        )
+                        { sweetsCategory ->
+                            Log.i("Kiyoshi","Carousel Ad Category : ${sweetsCategory}")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SweetsAdItem(
+    sweetsAd: SweetsAd,
+    modifier: Modifier = Modifier,
+    onSweetsAdClick: (SweetsCategory) -> Unit
+){
+    ECommcSurface (
+        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier.padding(
+            start = 4.dp,
+            end = 4.dp,
+            bottom = 8.dp
+        )
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .clickable { }
+                .padding(8.dp)
+        ) {
+            SweetsAdImage(
+                imageUrl = sweetsAd.imageUrl,
+                elevation = 4.dp,
+                contentDescription = null,
+                modifier = Modifier.size(250.dp)
+            )
+//            Text(
+//                text = sweetsAd.name,
+//                style = MaterialTheme.typography.subtitle1,
+//                color = MaterialTheme.colors.secondary
+//            )
+        }
+    }
+}
+
+@Composable
+private fun SweetsAdImage(
+    imageUrl: String,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    elevation: Dp = 0.dp,
+) {
+    ECommcSurface(
+        color = Color.LightGray,
+        elevation = elevation,
+        shape = RoundedCornerShape(10.dp),
+        modifier = modifier
+    ) {
+        Image(
+            painter = rememberImagePainter(
+                data = imageUrl,
+                builder = {
+                    crossfade(true)
+                    placeholder(drawableResId = R.drawable.plate_placeholder)
+                }
+            ),
+            contentDescription = contentDescription,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
     }
 }
 

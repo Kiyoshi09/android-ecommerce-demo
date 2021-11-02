@@ -10,4 +10,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="colorSurfaceDark">#FF002022</color>
     <color name="borderColor">#666565</color>
+
+    <color name="teal_BB">#008080BB</color>
 </resources>

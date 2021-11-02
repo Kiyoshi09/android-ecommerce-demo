@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
         splashScreen = installSplashScreen()
 
         setContent {
-            AppContent{
+            AppContent {
                 splashScreen.setKeepVisibleCondition(it)
             }
         }
