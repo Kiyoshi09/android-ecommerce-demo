@@ -19,8 +19,6 @@ import com.tealiumlabs.ecommercec.ui.screen.search.SearchScreen
 fun EcommNavigation(viewModel: HomeViewModel) {
     val navController = rememberAnimatedNavController()
 
-    //val screenList = listOf(Screen.Home, Screen.Favorite, Screen.Search, Screen.History, Screen.Profile)
-
     AnimatedNavHost(
         navController = navController,
         startDestination = Screen.Home.route,

@@ -20,10 +20,10 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    //primary = Yellow800,
-    primary = Teal200,
-    //primaryVariant = Yellow800,
-    primaryVariant = Teal200,
+    primary = Yellow800,
+    //primary = Teal200,
+    primaryVariant = Yellow800,
+    //primaryVariant = Teal200,
     secondary = secondary,
     background = Color.White,
     surface = Color.White,
@@ -34,7 +34,10 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun ECommerceCTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun ECommerceCTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     /*
     val colors = if (darkTheme) {
         DarkColorPalette
