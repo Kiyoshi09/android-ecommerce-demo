@@ -7,24 +7,22 @@ data class OutfitCampaign(
 )
 
 val outfitCampaignList = listOf<OutfitCampaign>(
+
    OutfitCampaign(
-       id = 301,
-       name = "Sale",
-       imageUrl = "https://www.kiyotaro.cloud/images/camp1_sale.png"
+       id = 311,
+       name = "Home_Decor",
+       imageUrl = "https://ecommerce.tealiumdemo.com/media/wysiwyg/homepage-three-column-promo-01B.png"
    ),
+
    OutfitCampaign(
-       id = 302,
-       name = "Coupon",
-       imageUrl = "https://www.kiyotaro.cloud/images/camp2_coupon.jpg"
+       id = 312,
+       name = "Shop_Private_Sale",
+       imageUrl = "https://ecommerce.tealiumdemo.com/media/wysiwyg/homepage-three-column-promo-02.png"
    ),
+
    OutfitCampaign(
-       id = 303,
-       name = "Category",
-       imageUrl = "https://www.kiyotaro.cloud/images/camp3_category.jpg"
-   ),
-   OutfitCampaign(
-       id = 304,
-       name = "Other",
-       imageUrl = "https://www.kiyotaro.cloud/images/camp4_glasses.jpg"
+       id = 313,
+       name = "Travel_Gear",
+       imageUrl = "https://ecommerce.tealiumdemo.com/media/wysiwyg/homepage-three-column-promo-03.png"
    ),
 )

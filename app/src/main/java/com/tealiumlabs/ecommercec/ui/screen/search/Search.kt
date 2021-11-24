@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -37,31 +38,32 @@ fun SearchBar(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Row(
-       modifier = Modifier.fillMaxWidth(),
-       verticalAlignment = Alignment.CenterVertically
-    ){
-       AnimatedVisibility(visible = focused) {
-           // Back button
-           IconButton(
-               onClick = {
-                   focusManager.clearFocus()
-                   keyboardController?.hide()
-                   onBack()
-               },
-           modifier = Modifier.padding(start = 2.dp)) {
-              Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-           }
-       }
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AnimatedVisibility(visible = focused) {
+            // Back button
+            IconButton(
+                onClick = {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                    onBack()
+                },
+                modifier = Modifier.padding(start = 2.dp)
+            ) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+            }
+        }
 
-       SearchTextField(
-           query = query,
-           onQueryChange = onQueryChange,
-           onSearchFocusChange = onSearchFocusChange,
-           onClearQuery = onClearQuery,
-           searching = searching,
-           focused = focused,
-           modifier = modifier.weight(1f)
-       )
+        SearchTextField(
+            query = query,
+            onQueryChange = onQueryChange,
+            onSearchFocusChange = onSearchFocusChange,
+            onClearQuery = onClearQuery,
+            searching = searching,
+            focused = focused,
+            modifier = modifier.weight(1f)
+        )
     }
 }
 
@@ -74,7 +76,7 @@ fun SearchTextField(
     searching: Boolean,
     focused: Boolean,
     modifier: Modifier = Modifier
-){
+) {
     val focusRequester = remember { FocusRequester() }
 
     Surface(
@@ -89,47 +91,47 @@ fun SearchTextField(
                         end = 16.dp
                     )
             ),
-        color = Color(0xffF5F5F5),
-        shape = RoundedCornerShape(percent = 50)
+        color = MaterialTheme.colors.background,
+        shape = RoundedCornerShape(percent = 20)
     ) {
         Box(
             contentAlignment = Alignment.CenterStart,
             modifier = modifier
         ) {
 
-            if(query.text.isEmpty()) {
+            if (query.text.isEmpty()) {
                 SearchHint(modifier.padding(start = 24.dp, end = 8.dp))
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-               BasicTextField(
-                   value = query,
-                   onValueChange = onQueryChange,
-                   modifier = Modifier
-                       .fillMaxHeight()
-                       .weight(1f)
-                       .onFocusChanged {
-                           onSearchFocusChange(it.isFocused)
-                       }
-                       .focusRequester(focusRequester)
-                       .padding(top = 9.dp, bottom = 8.dp, start = 24.dp, end = 8.dp),
-                   singleLine = true
-               )
+                BasicTextField(
+                    value = query,
+                    onValueChange = onQueryChange,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f)
+                        .onFocusChanged {
+                            onSearchFocusChange(it.isFocused)
+                        }
+                        .focusRequester(focusRequester)
+                        .padding(top = 9.dp, bottom = 8.dp, start = 24.dp, end = 8.dp),
+                    singleLine = true
+                )
 
-               when {
-                   searching -> {
-                       CircularProgressIndicator(
-                           modifier = Modifier
-                               .padding(horizontal = 6.dp)
-                               .size(36.dp)
-                       )
-                   }
-                   query.text.isNotEmpty() -> {
-                       IconButton(onClick = onClearQuery) {
-                           Icon(imageVector = Icons.Filled.Cancel, contentDescription = null)
-                       }
-                   }
-               }
+                when {
+                    searching -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .padding(horizontal = 6.dp)
+                                .size(36.dp)
+                        )
+                    }
+                    query.text.isNotEmpty() -> {
+                        IconButton(onClick = onClearQuery) {
+                            Icon(imageVector = Icons.Filled.Cancel, contentDescription = null)
+                        }
+                    }
+                }
             }
         }
     }
@@ -146,55 +148,49 @@ fun SearchHint(modifier: Modifier = Modifier) {
     ) {
         Text(
             color = Color(0xff757575),
-            text = "Search a Tag or Description",
+            text = "Search a Name or Description",
         )
     }
 }
 
 @Composable
-fun <R, S> rememberSearchState(
+fun <R> rememberSearchState(
     query: TextFieldValue = TextFieldValue(""),
     focused: Boolean = false,
     searching: Boolean = false,
-    suggestions: List<S> = emptyList(),
     searchResults: List<R> = emptyList()
-): SearchState<R, S> {
+): SearchState<R> {
     return remember {
         SearchState(
             query = query,
             focused = focused,
             searching = searching,
-            suggestions = suggestions,
             searchResults = searchResults
         )
     }
 }
 
 @Stable
-class SearchState<R, S>(
-   query: TextFieldValue,
-   focused: Boolean,
-   searching: Boolean,
-   suggestions: List<S>,
-   searchResults: List<R>
-){
+class SearchState<R>(
+    query: TextFieldValue,
+    focused: Boolean,
+    searching: Boolean,
+    searchResults: List<R>
+) {
     var query by mutableStateOf(query)
     var focused by mutableStateOf(focused)
     var searching by mutableStateOf(searching)
-    var suggestions by mutableStateOf(suggestions)
     var searchResults by mutableStateOf(searchResults)
 
     val searchDisplay: SearchDisplay
         get() = when {
             !focused && query.text.isEmpty() -> SearchDisplay.InitialResults
-            focused && query.text.isEmpty() -> SearchDisplay.Suggestions
             searchResults.isEmpty() -> SearchDisplay.NoResults
             else -> SearchDisplay.Results
         }
 
     override fun toString(): String {
         return "🚀 State query: $query, focused: $focused, searching: $searching " +
-                "suggestions: ${suggestions.size}, " +
                 "searchResults: ${searchResults.size}, " +
                 " searchDisplay: $searchDisplay"
 
@@ -202,5 +198,5 @@ class SearchState<R, S>(
 }
 
 enum class SearchDisplay {
-    InitialResults, Suggestions, Results, NoResults
+    InitialResults, Results, NoResults
 }

@@ -10,56 +10,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.tealiumlabs.ecommercec.ui.navigation.EcommNavigation
 import com.tealiumlabs.ecommercec.ui.screen.home.HomeViewModel
 
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 @Composable
 fun EcommApp(splashScreenVisibleCondition: (SplashScreen.KeepOnScreenCondition) -> Unit) {
 
-//    val context = LocalContext.current
-//    var isOnline by remember { mutableStateOf(checkIfOnline(context)) }
+    val viewModel: HomeViewModel = viewModel()
+    splashScreenVisibleCondition {
+        loadComplete()
+    }
 
-    //if (isOnline) {
-        val viewModel: HomeViewModel = viewModel()
-        splashScreenVisibleCondition {
-            //viewModel.state.value.run {
-            //    petState.loading || specialNeedsDogState.loading
-            //}
-            LoadComplete()
-        }
-
-        EcommNavigation(viewModel)
-
-//    } else {
-//        OfflineDialog { isOnline = checkIfOnline(context) }
-//    }
-
+    EcommNavigation(viewModel)
 }
 
-// Load Complete function
-fun LoadComplete(): Boolean {
-   return false
+fun loadComplete(): Boolean {
+    return false
 }
-
-
-//@Composable
-//fun OfflineDialog(onRetry: () -> Unit) {
-//    AlertDialog(
-//        onDismissRequest = {},
-//        title = { Text(text = "No Internet") },
-//        text = { Text(text = "No internet connection. Turn on Wifi or mobile data.") },
-//        confirmButton = {
-//            TextButton(onClick = onRetry) {
-//                Text("Retry")
-//            }
-//        }
-//    )
-//}
-//
-//@Suppress("DEPRECATION")
-//private fun checkIfOnline(context: Context): Boolean {
-//    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//    val activeNetwork = cm.activeNetworkInfo
-//    return activeNetwork?.isConnectedOrConnecting == true
-//}

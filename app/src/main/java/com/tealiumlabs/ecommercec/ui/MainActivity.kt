@@ -15,6 +15,7 @@ import com.tealiumlabs.ecommercec.ui.theme.ECommerceCTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.accompanist.pager.ExperimentalPagerApi
 
 @ExperimentalAnimationApi
 @AndroidEntryPoint
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var splashScreen: SplashScreen
 
+    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,6 +36,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @ExperimentalPagerApi
     @Composable
     fun AppContent(splashScreenVisibleCondition: (SplashScreen.KeepOnScreenCondition) -> Unit) {
         ECommerceCTheme {

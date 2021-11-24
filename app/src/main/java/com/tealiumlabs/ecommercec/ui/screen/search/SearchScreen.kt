@@ -40,24 +40,41 @@ fun SearchScreenTopAppBar(
     navController: NavController,
 ) {
     Row(
-        Modifier.fillMaxWidth()
-            .padding(0.dp, 10.dp, 10.dp, 0.dp),
-        horizontalArrangement = Arrangement.End
+        Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
     ) {
-        IconButton(onClick = {
-            navController.navigate(Screen.Cart.route) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
+        Column (
+            modifier = Modifier.weight(2f)
+        ){
+            Spacer(modifier = Modifier)
+        }
+
+        Column(
+            modifier = Modifier.weight(6f),
+        ) {
+            Spacer(modifier = Modifier)
+        }
+
+        Column(
+            modifier = Modifier.weight(2f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            IconButton(onClick = {
+                navController.navigate(Screen.Cart.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-                launchSingleTop = true
-                restoreState = true
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_cart),
+                    contentDescription = "Cart",
+                    tint = MaterialTheme.colors.onSurface,
+                )
             }
-        }) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_cart),
-                contentDescription = "Cart",
-                tint = MaterialTheme.colors.onSurface,
-            )
         }
     }
 }

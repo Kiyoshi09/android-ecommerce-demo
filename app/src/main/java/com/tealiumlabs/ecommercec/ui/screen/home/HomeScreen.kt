@@ -1,79 +1,45 @@
 package com.tealiumlabs.ecommercec.ui.screen.home
 
 import android.util.Log
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.tealiumlabs.ecommercec.R
-import com.tealiumlabs.ecommercec.data.repositories.SweetsCategory
-import com.tealiumlabs.ecommercec.model.OutfitAd
-import com.tealiumlabs.ecommercec.model.OutfitCampaign
-import com.tealiumlabs.ecommercec.model.OutfitCategory
-import com.tealiumlabs.ecommercec.model.SweetsAd
-import com.tealiumlabs.ecommercec.ui.components.ECommcSurface
+import com.tealiumlabs.ecommercec.model.*
 import com.tealiumlabs.ecommercec.ui.navigation.Screen
 import com.tealiumlabs.ecommercec.ui.screen.search.SearchBar
-import com.tealiumlabs.ecommercec.ui.theme.ECommerceCTheme
-import com.tealiumlabs.ecommercec.ui.theme.EcommTypography
-import com.tealiumlabs.ecommercec.ui.theme.colorBackground
-import com.tealiumlabs.ecommercec.ui.theme.colorTextBody
+import com.tealiumlabs.ecommercec.ui.screen.search.SearchDisplay
+import com.tealiumlabs.ecommercec.ui.screen.search.SearchState
+import com.tealiumlabs.ecommercec.ui.screen.search.rememberSearchState
+import com.tealiumlabs.ecommercec.ui.theme.*
+import kotlinx.coroutines.delay
 
+@ExperimentalPagerApi
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
     navController: NavController,
+    state: SearchState<Outfit> = rememberSearchState()
 ) {
+    val selectedTabIndex: Int by viewModel.selectedTabIndex.observeAsState(initial = OutfitCategory.All.index)
+
     Scaffold(
         topBar = {
             HomeScreenTopAppBar(
@@ -81,7 +47,18 @@ fun HomeScreen(
             )
         },
         content = {
-            HomeScreenContent(viewModel = viewModel)
+            HomeScreenBody(
+                outfitAdList = viewModel.outfitAdList,
+                outfitCampaignList = viewModel.outfitCampaignList,
+                outfitNewProductList = viewModel.outfitNewProductList,
+                outfitWomenList = viewModel.outfitWomenList,
+                outfitMenList = viewModel.outfitMenList,
+                outfitSearchResultList = viewModel.getSearchResults(state.query.text),
+                state = state,
+                selectedTabIndex = selectedTabIndex,
+            ){
+                viewModel.onChangeSelectedTab(it)
+            }
         },
         bottomBar = {
             HomeScreenBottomBar(
@@ -97,97 +74,212 @@ fun HomeScreenTopAppBar(
 ) {
     Row(
         Modifier
-            .fillMaxWidth()
-            .padding(0.dp, 10.dp, 10.dp, 0.dp),
-        horizontalArrangement = Arrangement.End
+            .background(veryLighGray)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
     ) {
-        Text(
-            text = "Tealium Commerce",
-            Modifier.padding(0.dp, 10.dp, 60.dp, 0.dp),
-            style = EcommTypography.h6
-        )
-        IconButton(onClick = {
-            navController.navigate(Screen.Cart.route) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-        }) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_cart),
-                contentDescription = "Cart",
-                tint = colors.onSurface,
+        Column(
+            modifier = Modifier.weight(2f)
+        ) {
+            Spacer(modifier = Modifier)
+        }
+
+        Column(
+            modifier = Modifier.weight(6f),
+        ) {
+            Text(
+                text = "Tealium Commerce",
+                Modifier.padding(24.dp, 8.dp, 0.dp, 0.dp),
+                style = EcommTypography.subtitle1
             )
         }
-    }
-}
 
-
-@Composable
-fun HomeScreenContent(viewModel: HomeViewModel) {
-
-    Column {
-
-        CategoryTabs()
-
-        BodyContents(viewModel = viewModel)
-    }
-}
-
-@Composable
-fun CategoryTabs() {
-
-    var selectedIndex by remember { mutableStateOf(0) }
-
-    ScrollableTabRow(
-        selectedTabIndex = selectedIndex,
-        edgePadding = 16.dp,
-        backgroundColor = colors.background,
-        divider = {},
-        indicator = {}
-    ) {
-        OutfitCategory.getOutfitCategoryList().forEachIndexed { index, category ->
-            Tab(
-                selected = index == selectedIndex,
-                onClick = { selectedIndex = index }
-            )
-            {
-                CategoryChip(
-                    categoryName = category.title,
-                    selected = index == selectedIndex,
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 16.dp)
+        Column(
+            modifier = Modifier.weight(2f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            IconButton(onClick = {
+                navController.navigate(Screen.Cart.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_cart),
+                    contentDescription = "Cart",
+                    tint = colors.onSurface,
                 )
             }
+        }
+    }
+}
 
+
+@ExperimentalPagerApi
+@Composable
+fun HomeScreenBody(
+    outfitAdList: List<OutfitAd>,
+    outfitCampaignList: List<OutfitCampaign>,
+    outfitNewProductList: List<Outfit>,
+    outfitWomenList: List<Outfit>,
+    outfitMenList: List<Outfit>,
+    outfitSearchResultList: List<Outfit>,
+    state: SearchState<Outfit>,
+    selectedTabIndex: Int,
+    onChangeSelectedTab: (Int) -> Unit
+) {
+
+    Column {
+        // Search Bar
+        GlobalSearch(state)
+
+        // Category Tabs
+        CategoryTabs(
+            state = state,
+            selectedIndex = selectedTabIndex,
+            onSelectedIndexChange = onChangeSelectedTab
+        )
+
+        LaunchedEffect(key1 = state.query){
+            Log.i("Kiyoshi", "Launched Effect : ${state.query.text}")
+
+            delay(100)
+            state.searchResults = outfitSearchResultList
+            state.searching = false
+        }
+
+        // Main Content
+        when (state.searchDisplay) {
+            SearchDisplay.InitialResults -> {
+                Log.i("Kiyoshi", "Search Display InitialResults")
+
+                when (selectedTabIndex) {
+                    OutfitCategory.All.index -> {
+
+                        HomeScreenContentAll(
+                            outfitAdList = outfitAdList,
+                            outfitCampaignList = outfitCampaignList,
+                            outfitNewProductList = outfitNewProductList,
+                        )
+                    }
+
+                    OutfitCategory.Women.index -> {
+                        HomeScreenContentList(
+                            outfitList = outfitWomenList,
+                        )
+                    }
+
+                    OutfitCategory.Men.index -> {
+                        HomeScreenContentList(
+                            outfitList = outfitMenList,
+                        )
+                    }
+
+                    OutfitCategory.Accessories.index -> {
+
+                    }
+
+                    OutfitCategory.HomeDecor.index -> {
+
+                    }
+
+                    OutfitCategory.Sale.index -> {
+
+                    }
+                }
+            }
+
+            SearchDisplay.NoResults -> {
+                Log.i("Kiyoshi", "Search Display NoResults")
+
+            }
+
+            SearchDisplay.Results -> {
+                Log.i("Kiyoshi", "Search Display Results")
+
+                HomeScreenContentList(
+                    outfitList = outfitSearchResultList
+                )
+            }
         }
     }
 }
 
 @Composable
-fun CategoryChip(
-    categoryName: String,
-    selected: Boolean,
-    modifier: Modifier = Modifier
+fun GlobalSearch(
+    state: SearchState<Outfit>
 ) {
-    Surface(
-        color = when {
-            selected -> colors.primary
-            else -> colors.onBackground.copy(alpha = 0.12f)
-        },
-        contentColor = when {
-            selected -> colors.onPrimary
-            else -> colors.onBackground
-        },
-        shape = RoundedCornerShape(40),
-        modifier = modifier
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(veryLighGray)
     ) {
-        Text(
-            text = categoryName,
-            style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Medium),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        SearchBar(
+            query = state.query,
+            onQueryChange = { state.query = it },
+            onSearchFocusChange = { state.focused = it },
+            onClearQuery = { state.query = TextFieldValue("") },
+            onBack = { state.query = TextFieldValue("") },
+            searching = state.searching,
+            focused = state.focused,
+            modifier = Modifier
         )
+    }
+}
+
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun CategoryTabs(
+    state: SearchState<Outfit>,
+    selectedIndex: Int,
+    onSelectedIndexChange: (Int) -> Unit
+) {
+    when (state.searchDisplay) {
+        SearchDisplay.InitialResults -> {
+
+            ScrollableTabRow(
+                edgePadding = 8.dp,
+                selectedTabIndex = selectedIndex,
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier
+                            .tabIndicatorOffset(tabPositions[selectedIndex])
+                    )
+                },
+                backgroundColor = veryLighGray
+            ) {
+                OutfitCategory.getOutfitCategoryList().forEachIndexed { index, category ->
+                    Tab(
+                        selected = selectedIndex == index,
+                        onClick = { onSelectedIndexChange(index) },
+                    ){
+                        Surface(
+                            modifier = Modifier
+                                .padding(top = 0.dp, bottom = 4.dp),
+                        ) {
+                            Text(
+                                text = category.title,
+                                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Medium),
+                                modifier = Modifier
+                                    .background(veryLighGray)
+                                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+        }
+        SearchDisplay.NoResults -> {
+
+        }
+        SearchDisplay.Results -> {
+
+        }
     }
 }
 
@@ -213,167 +305,5 @@ fun HomeScreenBottomBar(navController: NavController) {
                 label = { Text(screen.title) }
             )
         }
-    }
-}
-
-@OptIn(ExperimentalCoilApi::class)
-@Composable
-fun BodyContents(viewModel: HomeViewModel) {
-
-    Box {
-        LazyColumn {
-            item {
-                LazyRow {
-                    itemsIndexed(viewModel.outfitAdList) { index, outfitAd ->
-                        OutfitAdItem(
-                            outfitAd = outfitAd
-                        )
-                        { outfitCategory ->
-                            Log.i("Kiyoshi","Carousel Ad Category : ${outfitCategory}")
-                        }
-                    }
-                }
-
-//                Row (modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(top = 4.dp, bottom = 4.dp)
-//                    .background(colorBackground),
-//                    Arrangement.SpaceEvenly
-//                ){
-//                    viewModel.outfitCampaignList.forEach {outfitCampaign ->
-//                        OutfitCampaignItem(
-//                            outfitCampaign = outfitCampaign,
-//                            onOutfitCampaignClick = {},
-//                        )
-//                    }
-//                }
-            }
-        }
-    }
-}
-
-
-@Composable
-private fun OutfitAdItem(
-    outfitAd: OutfitAd,
-    modifier: Modifier = Modifier,
-    onOutfitAdClick: (OutfitCategory) -> Unit
-){
-    ECommcSurface (
-        shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.padding(
-            start = 4.dp,
-            end = 4.dp,
-            bottom = 8.dp
-        )
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .clickable {}
-                .padding(8.dp)
-        ) {
-            OutfitAdImage(
-                imageUrl = outfitAd.imageUrl,
-                elevation = 4.dp,
-                contentDescription = null,
-                modifier = Modifier
-                    .width(300.dp)
-                    .height(150.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun OutfitAdImage(
-    imageUrl: String,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    elevation: Dp = 0.dp,
-) {
-    ECommcSurface(
-        elevation = elevation,
-        shape = RoundedCornerShape(10.dp),
-        modifier = modifier
-    ) {
-        Image(
-            painter = rememberImagePainter(
-                data = imageUrl,
-                builder = {
-                    crossfade(true)
-                    placeholder(drawableResId = R.drawable.plate_placeholder)
-                }
-            ),
-            contentDescription = contentDescription,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-    }
-}
-
-@Composable
-private fun OutfitCampaignItem(
-    outfitCampaign: OutfitCampaign,
-    modifier: Modifier = Modifier,
-    onOutfitCampaignClick: (String) -> Unit,
-){
-    ECommcSurface (
-        modifier = Modifier.padding(
-            top = 8.dp,
-            start = 4.dp,
-            end = 4.dp,
-            bottom = 8.dp,
-        )
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
-                .background(colorBackground)
-                .clickable {}
-        ) {
-            OutfitCampaignImage(
-                imageUrl = outfitCampaign.imageUrl,
-                elevation = 0.dp,
-                contentDescription = null,
-                modifier = Modifier.size(90.dp),
-            )
-
-            Text(
-                outfitCampaign.name,
-                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Medium),
-                fontSize = 11.sp,
-                color = colorTextBody
-            )
-        }
-    }
-}
-
-@Composable
-private fun OutfitCampaignImage(
-    imageUrl: String,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    elevation: Dp = 0.dp,
-) {
-    ECommcSurface(
-        color = Color.LightGray,
-        elevation = elevation,
-        //shape = RoundedCornerShape(10.dp),
-        shape = CircleShape,
-        modifier = modifier
-    ) {
-        Image(
-            painter = rememberImagePainter(
-                data = imageUrl,
-                builder = {
-                    crossfade(true)
-                    placeholder(drawableResId = R.drawable.plate_placeholder)
-                }
-            ),
-            contentDescription = contentDescription,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
     }
 }

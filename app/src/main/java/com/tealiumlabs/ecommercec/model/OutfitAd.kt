@@ -1,6 +1,6 @@
 package com.tealiumlabs.ecommercec.model
 
-import com.tealiumlabs.ecommercec.data.repositories.SweetsCategory
+import com.tealiumlabs.ecommercec.ui.screen.home.OutfitCategory
 
 
 data class OutfitAd(
@@ -15,7 +15,7 @@ val outfitAdList = listOf<OutfitAd>(
         id = 11,
         name = "Women Ad1",
         category = OutfitCategory.Women,
-        imageUrl = "https://s.shld.net/is/image/Sears/k_032817_IVPU_hero_v5_2-qm-wid-eq-1500-amp-op_sharpen-eq-1",
+        imageUrl = "https://ecommerce.tealiumdemo.com/media/catalog/category/vip-banner.jpg",
     ),
     OutfitAd(
         id = 12,

@@ -1,6 +1,7 @@
 package com.tealiumlabs.ecommercec.data.repositories
 
 import com.tealiumlabs.ecommercec.model.*
+import com.tealiumlabs.ecommercec.ui.screen.home.OutfitCategory
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,6 +26,22 @@ class OutfitRepository @Inject constructor() {
                 outfitList.filter { outift ->  outift.category == OutfitCategory.Sale}
             }
             else -> outfitList
+        }
+
+        return outfits
+    }
+
+    fun getOutfitNewProductList(): List<Outfit> {
+        val newProductsSize = 6
+        val outfits = mutableListOf<Outfit>()
+        var order = outfitList.indices
+
+        var j = 0
+        for (i in order.shuffled()){
+            if(j >= newProductsSize) break
+
+            outfits.add(outfitList[i])
+            j++
         }
 
         return outfits

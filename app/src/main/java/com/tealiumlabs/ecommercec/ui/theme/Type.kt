@@ -38,6 +38,10 @@ val EcommTypography = Typography(
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
     ),
+    subtitle2 = TextStyle(
+        fontFamily = WorkSans,
+        fontSize = 20.sp,
+    ),
     button = TextStyle(
         fontFamily = WorkSans,
         fontWeight = FontWeight.SemiBold
@@ -46,6 +50,10 @@ val EcommTypography = Typography(
         fontFamily = WorkSans,
         fontWeight = FontWeight.SemiBold,
         fontSize = 26.sp,
+    ),
+    h5 = TextStyle(
+        fontFamily = WorkSans,
+        fontSize = 18.sp,
     ),
     h6 = TextStyle(
         fontFamily = Robots,
