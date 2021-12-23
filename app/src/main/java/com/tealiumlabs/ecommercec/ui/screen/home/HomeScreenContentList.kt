@@ -12,8 +12,10 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,15 +25,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.Outfit
+import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
 import com.tealiumlabs.ecommercec.ui.theme.EcommTypography
 import com.tealiumlabs.ecommercec.ui.theme.*
 
 @Composable
 fun HomeScreenContentList(
-    outfitList: List<Outfit>
+    navController: NavController,
+    outfitList: List<Outfit>,
+    outfitFavoriteList: MutableList<Outfit>
 ) {
 
     LazyColumn(
@@ -47,7 +53,12 @@ fun HomeScreenContentList(
                 elevation = 2.dp,
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp)
-                    .clickable { }
+                    .clickable {
+                        moveToProductScreen(
+                            navController = navController,
+                            prodId = outfit.id,
+                        )
+                    }
             ) {
                 Row(
                     modifier = Modifier
@@ -79,93 +90,111 @@ fun HomeScreenContentList(
                         modifier = Modifier.padding(start = 16.dp)
                     ) {
                         Column {
-                           Row {
-                               Box(
-                                   modifier = Modifier
-                                       .weight(2f),
-                                   Alignment.CenterStart
-                               ) {
-                                   Text(
-                                       text = outfit.name,
-                                       style = EcommTypography.h5.copy(
-                                           fontSize = 14.sp
-                                       ),
-                                       softWrap = true
-                                   )
-                               }
+                            Row {
+                                Box(
+                                    modifier = Modifier
+                                        .weight(2f),
+                                    Alignment.CenterStart
+                                ) {
+                                    Text(
+                                        text = outfit.name,
+                                        style = EcommTypography.h5.copy(
+                                            fontSize = 14.sp
+                                        ),
+                                        softWrap = true
+                                    )
+                                }
 
-                               Box(
-                                   modifier = Modifier
-                                       .padding(end = 8.dp)
-                                       .weight(1f),
-                                   Alignment.CenterEnd
-                               ) {
-                                   Text(
-                                       text = "$ ${outfit.price}",
-                                       style = EcommTypography.h5.copy(
-                                           fontSize = 12.sp,
-                                           color = colorPrice,
-                                       ),
-                                       softWrap = true,
-                                       textAlign = TextAlign.End,
-                                   )
-                               }
-                           }
+                                Box(
+                                    modifier = Modifier
+                                        .padding(end = 8.dp)
+                                        .weight(1f),
+                                    Alignment.CenterEnd
+                                ) {
+                                    Text(
+                                        text = "$ ${outfit.price}",
+                                        style = EcommTypography.h5.copy(
+                                            fontSize = 12.sp,
+                                            color = colorPrice,
+                                        ),
+                                        softWrap = true,
+                                        textAlign = TextAlign.End,
+                                    )
+                                }
+                            }
 
-                           Row {
-                              Box(
-                                  modifier = Modifier
-                                      .padding(top = 8.dp)
-                                      .weight(2f),
-                              ) {
-                                  Text(
-                                      text = outfit.description,
-                                      style = EcommTypography.h5.copy(
-                                          color = colorDesc,
-                                          fontSize = 12.sp
-                                      ),
-                                      maxLines = 2,
-                                      overflow = TextOverflow.Ellipsis,
-                                  )
-                              }
-                              Box(
-                                  modifier = Modifier
-                                      .weight(1f)
-                              ) {
+                            Row {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(top = 8.dp)
+                                        .weight(2f),
+                                ) {
+                                    Text(
+                                        text = outfit.description,
+                                        style = EcommTypography.h5.copy(
+                                            color = colorDesc,
+                                            fontSize = 12.sp
+                                        ),
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                ) {
 
-                              }
-                           }
+                                }
+                            }
 
-                           Row {
-                               Box(
-                                   modifier = Modifier
-                                       .weight(2f),
-                               ) {
-                                   Text(
-                                       text = "Learn More",
-                                       style = EcommTypography.h5.copy(
-                                           color = colorPrice,
-                                           fontSize = 12.sp
-                                       ),
-                                   )
-                               }
-                               Box(
-                                   modifier = Modifier
-                                       .weight(1f),
-                                   Alignment.BottomEnd
-                               ) {
+                            Row {
+                                Box(
+                                    modifier = Modifier
+                                        .weight(2f),
+                                ) {
+                                    Text(
+                                        text = "Learn More",
+                                        style = EcommTypography.h5.copy(
+                                            color = colorPrice,
+                                            fontSize = 12.sp
+                                        ),
+                                    )
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f),
+                                    Alignment.BottomEnd
+                                ) {
+                                    val isFavorite = mutableStateOf(outfitFavoriteList.contains(outfit))
+
                                     IconButton(
-                                        onClick = {}
+                                        onClick = {
+                                            if(outfitFavoriteList.contains(outfit)){
+                                                outfitFavoriteList.remove(outfit)
+                                                isFavorite.value = false
+                                            }
+                                            else
+                                            {
+                                                outfitFavoriteList.add(outfit)
+                                                isFavorite.value = true
+                                            }
+                                        }
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Outlined.FavoriteBorder,
+                                            imageVector =
+                                                    if(isFavorite.value) {
+                                                        Icons.Outlined.Favorite
+                                                    }
+                                                    else {
+                                                        Icons.Outlined.FavoriteBorder
+                                                    },
                                             contentDescription = null,
                                             modifier = Modifier.size(16.dp),
                                             tint = Color.LightGray
                                         )
                                     }
-                               }
-                           }
+                                }
+                            }
                         }
                     }
                 }

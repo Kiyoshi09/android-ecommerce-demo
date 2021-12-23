@@ -1,29 +1,30 @@
 package com.tealiumlabs.ecommercec.data.repositories
 
 import com.tealiumlabs.ecommercec.model.*
-import com.tealiumlabs.ecommercec.ui.screen.home.OutfitCategory
+import com.tealiumlabs.ecommercec.model.OutfitCategory
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class OutfitRepository @Inject constructor() {
+
     fun getOutfitList(category: OutfitCategory): List<Outfit> {
 
         val outfits = when (category) {
             OutfitCategory.Women -> {
-                outfitList.filter { outift ->  outift.category == OutfitCategory.Women}
+                outfitList.filter { outfit -> outfit.category == OutfitCategory.Women }
             }
             OutfitCategory.Men -> {
-                outfitList.filter { outift ->  outift.category == OutfitCategory.Men}
+                outfitList.filter { outift -> outift.category == OutfitCategory.Men }
             }
             OutfitCategory.Accessories -> {
-                outfitList.filter { outift ->  outift.category == OutfitCategory.Accessories}
+                outfitList.filter { outfit -> outfit.category == OutfitCategory.Accessories }
             }
             OutfitCategory.HomeDecor -> {
-                outfitList.filter { outift ->  outift.category == OutfitCategory.HomeDecor}
+                outfitList.filter { outfit -> outfit.category == OutfitCategory.HomeDecor }
             }
             OutfitCategory.Sale -> {
-                outfitList.filter { outift ->  outift.category == OutfitCategory.Sale}
+                outfitList.filter { outfit -> outfit.category == OutfitCategory.Sale }
             }
             else -> outfitList
         }
@@ -34,11 +35,11 @@ class OutfitRepository @Inject constructor() {
     fun getOutfitNewProductList(): List<Outfit> {
         val newProductsSize = 6
         val outfits = mutableListOf<Outfit>()
-        var order = outfitList.indices
+        val order = outfitList.indices
 
         var j = 0
-        for (i in order.shuffled()){
-            if(j >= newProductsSize) break
+        for (i in order.shuffled()) {
+            if (j >= newProductsSize) break
 
             outfits.add(outfitList[i])
             j++
@@ -51,7 +52,7 @@ class OutfitRepository @Inject constructor() {
 
         val adSize = 5
         val outfits = mutableListOf<OutfitAd>()
-        var adOrder = 0 until adSize
+        val adOrder = 0 until adSize
 
         when(category) {
             OutfitCategory.Women -> {
@@ -94,7 +95,6 @@ class OutfitRepository @Inject constructor() {
 
         return outfits
     }
-
 
     fun getOutfitCampaign(): List<OutfitCampaign> {
         return outfitCampaignList

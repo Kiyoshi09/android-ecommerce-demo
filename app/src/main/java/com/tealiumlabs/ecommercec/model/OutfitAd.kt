@@ -1,8 +1,5 @@
 package com.tealiumlabs.ecommercec.model
 
-import com.tealiumlabs.ecommercec.ui.screen.home.OutfitCategory
-
-
 data class OutfitAd(
     val id: Int,
     val name: String,
@@ -10,7 +7,7 @@ data class OutfitAd(
     val imageUrl: String
 )
 
-val outfitAdList = listOf<OutfitAd>(
+val outfitAdList = listOf(
     OutfitAd(
         id = 11,
         name = "Women Ad1",

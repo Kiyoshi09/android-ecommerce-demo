@@ -11,14 +11,15 @@ sealed class Screen(open val route: String = "",
     object Home : Screen("home", Icons.Outlined.Home, "Home")
     object Search: Screen("search", Icons.Outlined.Search, "Search")
     object Favorite: Screen("favorite", Icons.Outlined.Favorite, "Favorite")
-    object History: Screen("history", Icons.Outlined.Receipt, "History")
-    object Profile: Screen("profile", Icons.Outlined.AccountCircle, "Profile")
+    object Other: Screen("other", Icons.Outlined.Menu, "Other")
     object Cart: Screen("cart", Icons.Outlined.ShoppingCart, "Cart")
+    object Product: Screen("product", Icons.Outlined.Android, "Product")
+    object Checkout: Screen("Checkout", Icons.Outlined.Android, "Checkout")
+    object Complete: Screen("Complete", Icons.Outlined.Android, "Complete")
 
     companion object {
         fun getBottomTabScreens(): List<Screen> {
-            //return listOf(Home, Favorite, Search, History, Profile)
-            return listOf(Home, Search, Favorite, Profile)
+            return listOf(Home, Search, Favorite, Other)
         }
     }
 }

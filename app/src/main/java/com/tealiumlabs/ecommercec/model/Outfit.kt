@@ -1,6 +1,5 @@
 package com.tealiumlabs.ecommercec.model
 
-import com.tealiumlabs.ecommercec.ui.screen.home.OutfitCategory
 import javax.annotation.concurrent.Immutable
 
 @Immutable

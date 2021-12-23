@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -32,7 +33,9 @@ import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.model.OutfitAd
 import com.tealiumlabs.ecommercec.model.OutfitCampaign
+import com.tealiumlabs.ecommercec.model.OutfitCategory
 import com.tealiumlabs.ecommercec.ui.components.ECommcSurface
+import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
 import com.tealiumlabs.ecommercec.ui.theme.EcommTypography
 import com.tealiumlabs.ecommercec.ui.theme.colorPrice
 
@@ -40,6 +43,7 @@ import com.tealiumlabs.ecommercec.ui.theme.colorPrice
 @ExperimentalPagerApi
 @Composable
 fun HomeScreenContentAll(
+    navController: NavController,
     outfitAdList: List<OutfitAd>,
     outfitCampaignList: List<OutfitCampaign>,
     outfitNewProductList: List<Outfit>
@@ -112,6 +116,7 @@ fun HomeScreenContentAll(
             for (i in outfitNewProductList.indices step 2) {
                 item {
                     OutfitNewProduct(
+                        navController = navController,
                         outfitNewProduct1 = outfitNewProductList[i],
                         outfitNewProduct2 = outfitNewProductList[i + 1]
                     )
@@ -199,36 +204,8 @@ private fun OutfitCampaignItem(
 }
 
 @Composable
-private fun OutfitImage(
-    imageUrl: String,
-    contentDescription: String? = null,
-    modifier: Modifier,
-    shape: Shape = RectangleShape,
-    elevation: Dp = 0.dp,
-    contentScale: ContentScale = ContentScale.Fit
-) {
-    ECommcSurface(
-        elevation = elevation,
-        shape = shape,
-        modifier = modifier
-    ) {
-        Image(
-            painter = rememberImagePainter(
-                data = imageUrl,
-                builder = {
-                    crossfade(true)
-                    placeholder(drawableResId = R.drawable.plate_placeholder)
-                }
-            ),
-            contentDescription = contentDescription,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = contentScale
-        )
-    }
-}
-
-@Composable
 private fun OutfitNewProduct(
+    navController: NavController,
     outfitNewProduct1: Outfit,
     outfitNewProduct2: Outfit
 ) {
@@ -244,7 +221,12 @@ private fun OutfitNewProduct(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .clickable {  },
+                    .clickable {
+                        moveToProductScreen(
+                            navController = navController,
+                            prodId = product.id,
+                        )
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Column(
@@ -279,5 +261,34 @@ private fun OutfitNewProduct(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun OutfitImage(
+    imageUrl: String,
+    contentDescription: String? = null,
+    modifier: Modifier,
+    shape: Shape = RectangleShape,
+    elevation: Dp = 0.dp,
+    contentScale: ContentScale = ContentScale.Fit
+) {
+    ECommcSurface(
+        elevation = elevation,
+        shape = shape,
+        modifier = modifier
+    ) {
+        Image(
+            painter = rememberImagePainter(
+                data = imageUrl,
+                builder = {
+                    crossfade(true)
+                    placeholder(drawableResId = R.drawable.plate_placeholder)
+                }
+            ),
+            contentDescription = contentDescription,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = contentScale
+        )
     }
 }

@@ -13,4 +13,6 @@
 
     <color name="teal_BB">#008080BB</color>
     <color name="ic_launcher3_background">#F29F05</color>
+
+    <color name="colorTextBodyLight">#FFB0B0C3</color>
 </resources>
