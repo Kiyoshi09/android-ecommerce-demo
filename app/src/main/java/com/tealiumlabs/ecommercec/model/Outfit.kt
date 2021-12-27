@@ -630,7 +630,7 @@ val outfitList = listOf<Outfit>(
         name = "COMPACT MP3 PLAYER",
         price = 815.00,
         imageUrl_s = "https://ecommerce.tealiumdemo.com/media/catalog/product/cache/1/small_image/210x/9df78eab33525d08d6e5fb8d27136e95/h/d/hde013__1.jpg",
-        imageUrl_l = "https://ecommerce.tealiumdemo.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/h/d/hde013__1.jpg",
+        imageUrl_l = "https://ecommerce.tealiumdemo.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/h/d/hde013_.jpg",
         description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     ),
 

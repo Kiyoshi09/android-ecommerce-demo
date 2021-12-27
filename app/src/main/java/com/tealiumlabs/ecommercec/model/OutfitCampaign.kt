@@ -7,7 +7,7 @@ data class OutfitCampaign(
     val category: OutfitCategory,
 )
 
-val outfitCampaignList = listOf<OutfitCampaign>(
+val outfitCampaignList = listOf(
 
     OutfitCampaign(
         id = 311,
