@@ -11,13 +11,13 @@ val outfitAdList = listOf(
     OutfitAd(
         id = 11,
         name = "Women Ad1",
-        category = OutfitCategory.Women,
+        category = OutfitCategory.HomeDecor,
         imageUrl = "https://ecommerce.tealiumdemo.com/media/catalog/category/vip-banner.jpg",
     ),
     OutfitAd(
         id = 12,
         name = "Women Ad2",
-        category = OutfitCategory.Women,
+        category = OutfitCategory.Accessories,
         imageUrl = "https://ecommerce.tealiumdemo.com/media/wysiwyg/slide-1.jpg",
     ),
     OutfitAd(
@@ -29,7 +29,7 @@ val outfitAdList = listOf(
     OutfitAd(
         id = 14,
         name = "Women Ad4",
-        category = OutfitCategory.Women,
+        category = OutfitCategory.Men,
         imageUrl = "https://ecommerce.tealiumdemo.com/media/wysiwyg/slide-3.jpg",
     ),
     OutfitAd(
@@ -41,7 +41,7 @@ val outfitAdList = listOf(
     OutfitAd(
         id = 16,
         name = "Women Ad6",
-        category = OutfitCategory.Women,
+        category = OutfitCategory.Men,
         imageUrl = "https://ecommerce.tealiumdemo.com/media/catalog/category/plp-m-newarrivals.jpg",
     ),
 )

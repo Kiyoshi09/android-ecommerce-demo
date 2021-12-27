@@ -46,7 +46,8 @@ fun HomeScreenContentAll(
     navController: NavController,
     outfitAdList: List<OutfitAd>,
     outfitCampaignList: List<OutfitCampaign>,
-    outfitNewProductList: List<Outfit>
+    outfitNewProductList: List<Outfit>,
+    onChangeSelectedTab: (Int) -> Unit,
 ) {
     val pageState = rememberPagerState()
 
@@ -66,7 +67,8 @@ fun HomeScreenContentAll(
                     OutfitAdItem(
                         outfitAd = outfitAdList[it]
                     ) { outfitCategory ->
-                        Log.i("Kiyoshi", "Outfit Ad : $outfitCategory")
+                        //Log.i("Kiyoshi", "Outfit Ad : $outfitCategory")
+                        onChangeSelectedTab(outfitCategory.index)
                     }
                 }
             }
@@ -93,7 +95,8 @@ fun HomeScreenContentAll(
                             outfitCampaign = outfitCampain
                         )
                         { outfitCategory ->
-                            Log.i("Kiyoshi", "Outfit Campaign/Banner : $outfitCategory")
+                            //Log.i("Kiyoshi", "Outfit Campaign/Banner : $outfitCategory")
+                            onChangeSelectedTab(outfitCategory.index)
                         }
                     }
                 }
@@ -151,7 +154,6 @@ private fun Indicators(currentPosition: Int, contentCount: Int) {
 @Composable
 private fun OutfitAdItem(
     outfitAd: OutfitAd,
-    modifier: Modifier = Modifier,
     onOutfitAdClick: (OutfitCategory) -> Unit
 ) {
     ECommcSurface(
@@ -160,7 +162,9 @@ private fun OutfitAdItem(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .clickable {}
+                .clickable {
+                    onOutfitAdClick(outfitAd.category)
+                }
         ) {
             OutfitImage(
                 imageUrl = outfitAd.imageUrl,
@@ -179,7 +183,6 @@ private fun OutfitAdItem(
 @Composable
 private fun OutfitCampaignItem(
     outfitCampaign: OutfitCampaign,
-    modifier: Modifier = Modifier,
     onOutfitCampaignClick: (OutfitCategory) -> Unit
 ) {
     ECommcSurface(
@@ -189,7 +192,9 @@ private fun OutfitCampaignItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(4.dp)
-                .clickable {},
+                .clickable {
+                    onOutfitCampaignClick(outfitCampaign.category)
+                },
             Alignment.Center
         ) {
             OutfitImage(

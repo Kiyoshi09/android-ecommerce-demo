@@ -31,6 +31,7 @@ import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
 import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenTopAppBar
 import com.tealiumlabs.ecommercec.model.EcommViewModel
+import com.tealiumlabs.ecommercec.model.OutfitCategory
 import com.tealiumlabs.ecommercec.ui.screen.product.Up
 import com.tealiumlabs.ecommercec.ui.theme.*
 
@@ -135,7 +136,7 @@ private fun CartScreenBody(
                 Button(
                     enabled = b,
                     onClick = {
-                              moveToCheckoutScreen(navController = navController)
+                        moveToCheckoutScreen(navController = navController)
                     },
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
@@ -229,7 +230,8 @@ private fun CartScreenBody(
                                 ) {
                                     Spacer(modifier = Modifier.width(32.dp))
                                     Text(
-                                        text = "Color : White",
+                                        text = if (outfitInCart.outfit.category == OutfitCategory.Women
+                                            || outfitInCart.outfit.category == OutfitCategory.Men) "Color : White" else "             ",
                                         style = EcommTypography.h5.copy(
                                             fontSize = 12.sp,
                                         ),
@@ -263,7 +265,8 @@ private fun CartScreenBody(
                                         modifier = Modifier.weight(4f)
                                     ) {
                                         Text(
-                                            text = "Size : XL",
+                                            text = if (outfitInCart.outfit.category == OutfitCategory.Women
+                                                || outfitInCart.outfit.category == OutfitCategory.Men) "Size : XL" else "          ",
                                             style = EcommTypography.h5.copy(
                                                 fontSize = 12.sp
                                             ),

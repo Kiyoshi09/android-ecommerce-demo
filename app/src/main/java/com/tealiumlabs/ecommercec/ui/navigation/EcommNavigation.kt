@@ -25,7 +25,9 @@ import com.tealiumlabs.ecommercec.ui.theme._veryLightGray
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @Composable
-fun EcommNavigation(viewModel: EcommViewModel) {
+fun EcommNavigation(
+    viewModel: EcommViewModel,
+) {
 
     val systemUiController = rememberSystemUiController()
     SideEffect {
@@ -105,7 +107,10 @@ fun EcommNavigation(viewModel: EcommViewModel) {
                 null
             }
         ){
-            OtherScreen(viewModel = viewModel, navController = navController)
+            OtherScreen(
+                viewModel = viewModel,
+                navController = navController,
+            )
         }
 
         composable(
@@ -142,6 +147,7 @@ fun EcommNavigation(viewModel: EcommViewModel) {
                     type = NavType.LongType
                 }
             )
+
         ){
             ProductScreen(
                 viewModel = viewModel,

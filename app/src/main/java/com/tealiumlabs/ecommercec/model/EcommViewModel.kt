@@ -3,17 +3,21 @@ package com.tealiumlabs.ecommercec.model
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tealiumlabs.ecommercec.data.repositories.OutfitRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+
 @HiltViewModel
 class EcommViewModel @Inject constructor(
     outfitRepository: OutfitRepository
 ): ViewModel() {
+
+    val tealiumAccount = mutableStateOf("")
+    val tealiumProfile = mutableStateOf("")
+    val tealiumDataSource = mutableStateOf("")
+    val tealiumEnvironment = mutableStateOf("")
 
     private var _outfitAdList = outfitRepository.getOutfitAdList(OutfitCategory.All)
     val outfitAdList: List<OutfitAd>
@@ -30,6 +34,19 @@ class EcommViewModel @Inject constructor(
     private var _outfitMenList = outfitRepository.getOutfitList(OutfitCategory.Men)
     val outfitMenList: List<Outfit>
         get() = _outfitMenList
+
+    private var _outfitAccessoriesList = outfitRepository.getOutfitList(OutfitCategory.Accessories)
+    val outfitAccessoriesList: List<Outfit>
+        get() = _outfitAccessoriesList
+
+    private var _outfitHomeDecorList = outfitRepository.getOutfitList(OutfitCategory.HomeDecor)
+    val outfitHomeDecorList: List<Outfit>
+        get() = _outfitHomeDecorList
+
+    private var _outfitSaleList = outfitRepository.getOutfitList(OutfitCategory.Sale)
+    val outfitSaleList: List<Outfit>
+        get() = _outfitSaleList
+
 
     private var _outfitCampaignList = outfitRepository.getOutfitCampaign()
     val outfitCampaignList: List<OutfitCampaign>
@@ -126,4 +143,21 @@ class EcommViewModel @Inject constructor(
     }
 
     var emailAddress = mutableStateOf("")
+
+    val isOptIn = mutableStateOf(true)
+    val consentAnalytics = mutableStateOf(true)
+    val consentAffiliate = mutableStateOf(true)
+    val consentDisplayAd = mutableStateOf(true)
+    val consentSearch = mutableStateOf(true)
+    val consentEmail = mutableStateOf(true)
+    val consentPersonalization = mutableStateOf(true)
+    val consentSocial = mutableStateOf(true)
+    val consentBigData = mutableStateOf(true)
+    val consentMisc = mutableStateOf(true)
+    val consentCookieMatch = mutableStateOf(true)
+    val consentCDP = mutableStateOf(true)
+    val consentMobile = mutableStateOf(true)
+    val consentEngagement = mutableStateOf(true)
+    val consentMonitoring = mutableStateOf(true)
+    val consentCRM = mutableStateOf(true)
 }

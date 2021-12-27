@@ -12,13 +12,13 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
@@ -31,6 +31,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.tealiumlabs.ecommercec.R
+import com.tealiumlabs.ecommercec.data.prefsStore.readTealiumAccountSettings
+import com.tealiumlabs.ecommercec.data.prefsStore.saveTealiumAccountSettings
 import com.tealiumlabs.ecommercec.model.*
 import com.tealiumlabs.ecommercec.ui.components.CustomTextField
 import com.tealiumlabs.ecommercec.ui.navigation.Screen
@@ -40,6 +42,7 @@ import com.tealiumlabs.ecommercec.ui.screen.search.SearchState
 import com.tealiumlabs.ecommercec.ui.screen.search.rememberSearchState
 import com.tealiumlabs.ecommercec.ui.theme.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
@@ -50,6 +53,24 @@ fun HomeScreen(
 ) {
     //val selectedTabIndex: Int by viewModel.selectedTabIndex.observeAsState(initial = OutfitCategory.All.index)
     val selectedTabIndex: Int = viewModel.selectedTabIndex.value
+
+    val tealConfigStr = readTealiumAccountSettings(LocalContext.current).collectAsState(initial = ";;;").value
+    val acct = tealConfigStr.split(";")[0]
+    val prof = tealConfigStr.split(";")[1]
+    val ds = tealConfigStr.split(";")[2]
+    val env = tealConfigStr.split(";")[3]
+
+    viewModel.tealiumAccount.value = acct
+    viewModel.tealiumProfile.value = prof
+    viewModel.tealiumDataSource.value = ds
+    viewModel.tealiumEnvironment.value = env
+
+    Log.i("KIYOSHI-TEAL", "[tealium settings] " +
+            "account:${viewModel.tealiumAccount.value}, " +
+            "profile:${viewModel.tealiumProfile.value}, " +
+            "dataSource:${viewModel.tealiumDataSource.value}, " +
+            "environment:${viewModel.tealiumEnvironment.value}"
+    )
 
     Scaffold(
         topBar = {
@@ -67,6 +88,9 @@ fun HomeScreen(
                 outfitNewProductList = viewModel.outfitNewProductList,
                 outfitWomenList = viewModel.outfitWomenList,
                 outfitMenList = viewModel.outfitMenList,
+                outfitAccessoriesList = viewModel.outfitAccessoriesList,
+                outfitHomeDecorList = viewModel.outfitHomeDecorList,
+                outfitSaleList = viewModel.outfitSaleList,
                 outfitSearchResultList = viewModel.getSearchResults(state.query.text),
                 outfitFavoriteList = viewModel.favoriteOutfitList,
                 state = state,
@@ -94,6 +118,9 @@ private fun HomeScreenBody(
     outfitNewProductList: List<Outfit>,
     outfitWomenList: List<Outfit>,
     outfitMenList: List<Outfit>,
+    outfitAccessoriesList: List<Outfit>,
+    outfitHomeDecorList: List<Outfit>,
+    outfitSaleList: List<Outfit>,
     outfitSearchResultList: List<Outfit>,
     outfitFavoriteList: MutableList<Outfit>,
     state: SearchState<Outfit>,
@@ -125,12 +152,12 @@ private fun HomeScreenBody(
 
                 when (selectedTabIndex) {
                     OutfitCategory.All.index -> {
-
                         HomeScreenContentAll(
                             navController = navController,
                             outfitAdList = outfitAdList,
                             outfitCampaignList = outfitCampaignList,
                             outfitNewProductList = outfitNewProductList,
+                            onChangeSelectedTab = onChangeSelectedTab,
                         )
                     }
 
@@ -151,15 +178,27 @@ private fun HomeScreenBody(
                     }
 
                     OutfitCategory.Accessories.index -> {
-
+                        HomeScreenContentList(
+                            navController = navController,
+                            outfitList = outfitAccessoriesList,
+                            outfitFavoriteList = outfitFavoriteList,
+                        )
                     }
 
                     OutfitCategory.HomeDecor.index -> {
-
+                        HomeScreenContentList(
+                            navController = navController,
+                            outfitList = outfitHomeDecorList,
+                            outfitFavoriteList = outfitFavoriteList,
+                        )
                     }
 
                     OutfitCategory.Sale.index -> {
-
+                        HomeScreenContentList(
+                            navController = navController,
+                            outfitList = outfitSaleList,
+                            outfitFavoriteList = outfitFavoriteList,
+                        )
                     }
                 }
             }
@@ -481,5 +520,147 @@ fun GlobalSearch(
             focused = state.focused,
             modifier = Modifier
         )
+    }
+}
+
+@Composable
+fun TealiumProfileConfigureDialog(
+    openDialog: MutableState<Boolean>,
+    account: String,
+    profile: String,
+    dataSource: String,
+    environment: String,
+) {
+    val acct = remember { mutableStateOf(account) }
+    val prof = remember { mutableStateOf(profile) }
+    val ds = remember { mutableStateOf(dataSource) }
+    val env = remember { mutableStateOf(environment) }
+
+    val focusRequesters = List(6) { FocusRequester() }
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    if (openDialog.value) {
+
+        Dialog(
+            onDismissRequest = { openDialog.value = false }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .size(300.dp, 260.dp)
+                    .clip(RoundedCornerShape(5.dp))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize(),
+                ) {
+                    Text(
+                        text = "Tealium Account Information",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = EcommTypography.subtitle1.copy(fontSize = 16.sp),
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    CustomTextField(
+                        textValue = "Account",
+                        bgColor = colorTextBodyLight,
+                        stateValue = acct,
+                        focusRequestN = focusRequesters[0],
+                        focusRequestN1 = focusRequesters[1],
+                        fontSize = 16.sp,
+                        icon = Icons.Filled.AccountBox,
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    CustomTextField(
+                        textValue = "Profile",
+                        bgColor = colorTextBodyLight,
+                        stateValue = prof,
+                        focusRequestN = focusRequesters[1],
+                        focusRequestN1 = focusRequesters[2],
+                        fontSize = 16.sp,
+                        icon = Icons.Filled.Campaign,
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    CustomTextField(
+                        textValue = "DataSource",
+                        bgColor = colorTextBodyLight,
+                        stateValue = ds,
+                        focusRequestN = focusRequesters[2],
+                        focusRequestN1 = focusRequesters[3],
+                        fontSize = 16.sp,
+                        icon = Icons.Filled.DataUsage,
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    CustomTextField(
+                        textValue = "Environment",
+                        bgColor = colorTextBodyLight,
+                        stateValue = env,
+                        focusRequestN = focusRequesters[3],
+                        focusRequestN1 = focusRequesters[4],
+                        fontSize = 16.sp,
+                        icon = Icons.Filled.Architecture,
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.padding(4.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                acct.value = ""
+                                prof.value = ""
+                                ds.value = ""
+                                env.value = ""
+                            },
+                            modifier = Modifier
+                                .weight(0.5f)
+                                .padding(4.dp)
+                                .focusOrder(focusRequesters[4]) {
+                                }
+                        ) {
+                            Text("Clear")
+                        }
+
+                        Button(
+                            onClick = {
+                                val tealConfigStr = "${acct.value};${prof.value};${ds.value};${env.value}"
+
+                                scope.launch {
+                                    saveTealiumAccountSettings(
+                                        context = context,
+                                        tealConfig = tealConfigStr,
+                                    )
+                                }
+
+                                openDialog.value = false
+                            },
+                            modifier = Modifier
+                                .weight(0.5f)
+                                .padding(4.dp)
+                                .focusOrder(focusRequesters[5]) {
+                                }
+                        ) {
+                            Text("Save")
+                        }
+
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+            }
+        }
     }
 }

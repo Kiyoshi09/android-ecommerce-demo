@@ -14,11 +14,14 @@ import com.tealiumlabs.ecommercec.model.EcommViewModel
 fun EcommApp(splashScreenVisibleCondition: (SplashScreen.KeepOnScreenCondition) -> Unit) {
 
     val viewModel: EcommViewModel = viewModel()
+
     splashScreenVisibleCondition {
         loadComplete()
     }
 
-    EcommNavigation(viewModel)
+    EcommNavigation(
+        viewModel = viewModel,
+    )
 }
 
 fun loadComplete(): Boolean {
