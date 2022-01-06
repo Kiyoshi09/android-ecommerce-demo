@@ -1,6 +1,7 @@
 package com.tealiumlabs.ecommercec.ui.screen.search
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -18,12 +19,35 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.unit.dp
+import com.tealiumlabs.ecommercec.model.Outfit
+import com.tealiumlabs.ecommercec.ui.theme.veryLighGray
+
+@Composable
+fun GlobalSearch(
+    state: SearchState<Outfit>
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(veryLighGray)
+    ) {
+        SearchBar(
+            query = state.query,
+            onQueryChange = { state.query = it },
+            onSearchFocusChange = { state.focused = it },
+            onClearQuery = { state.query = TextFieldValue("") },
+            onBack = { state.query = TextFieldValue("") },
+            searching = state.searching,
+            focused = state.focused,
+            modifier = Modifier
+        )
+    }
+}
 
 @OptIn(ExperimentalComposeUiApi::class, androidx.compose.animation.ExperimentalAnimationApi::class)
 @Composable
-fun SearchBar(
+private fun SearchBar(
     query: TextFieldValue,
     onQueryChange: (TextFieldValue) -> Unit,
     onSearchFocusChange: (Boolean) -> Unit,

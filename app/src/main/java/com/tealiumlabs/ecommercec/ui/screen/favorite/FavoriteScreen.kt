@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
-import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenBottomBar
-import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenTopAppBar
 import com.tealiumlabs.ecommercec.model.EcommViewModel
-import com.tealiumlabs.ecommercec.ui.screen.home.OutfitImage
+import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
+import com.tealiumlabs.ecommercec.ui.components.OutfitImage
+import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.screen.product.Header
 import com.tealiumlabs.ecommercec.ui.theme.*
 
@@ -37,7 +37,7 @@ fun FavoriteScreen(
 ) {
     Scaffold(
         topBar = {
-            HomeScreenTopAppBar(
+            GlobalTopAppBar(
                 navController = navController,
                 outfitsInCart = viewModel.cartAddedOutfitList.size,
                 emailAddress = viewModel.emailAddress
@@ -54,7 +54,7 @@ fun FavoriteScreen(
             }
         },
         bottomBar = {
-            HomeScreenBottomBar(
+            ScreenBottomBar(
                 navController = navController
             )
         }

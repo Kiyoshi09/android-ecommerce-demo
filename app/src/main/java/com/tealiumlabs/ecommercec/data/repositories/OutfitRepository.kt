@@ -10,12 +10,12 @@ class OutfitRepository @Inject constructor() {
 
     fun getOutfitList(category: OutfitCategory): List<Outfit> {
 
-        val outfits = when (category) {
+        return when (category) {
             OutfitCategory.Women -> {
                 outfitList.filter { outfit -> outfit.category == OutfitCategory.Women }
             }
             OutfitCategory.Men -> {
-                outfitList.filter { outift -> outift.category == OutfitCategory.Men }
+                outfitList.filter { outfit -> outfit.category == OutfitCategory.Men }
             }
             OutfitCategory.Accessories -> {
                 outfitList.filter { outfit -> outfit.category == OutfitCategory.Accessories }
@@ -28,8 +28,6 @@ class OutfitRepository @Inject constructor() {
             }
             else -> outfitList
         }
-
-        return outfits
     }
 
     fun getOutfitNewProductList(): List<Outfit> {

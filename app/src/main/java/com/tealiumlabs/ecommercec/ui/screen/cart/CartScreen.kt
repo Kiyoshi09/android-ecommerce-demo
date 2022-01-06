@@ -10,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,10 +27,10 @@ import com.tealiumlabs.ecommercec.model.OutfitInCart
 import com.tealiumlabs.ecommercec.ui.components.QuantitySelectorSmall
 import com.tealiumlabs.ecommercec.ui.navigation.moveToCheckoutScreen
 import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
-import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenBottomBar
-import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenTopAppBar
 import com.tealiumlabs.ecommercec.model.EcommViewModel
 import com.tealiumlabs.ecommercec.model.OutfitCategory
+import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
+import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.screen.product.Up
 import com.tealiumlabs.ecommercec.ui.theme.*
 
@@ -42,8 +41,7 @@ fun CartScreen(
 ) {
     Scaffold(
         topBar = {
-
-            HomeScreenTopAppBar(
+            GlobalTopAppBar(
                 navController = navController,
                 outfitsInCart = viewModel.cartAddedItemsTotalQty(),
                 emailAddress = viewModel.emailAddress,
@@ -60,7 +58,7 @@ fun CartScreen(
             }
         },
         bottomBar = {
-            HomeScreenBottomBar(
+            ScreenBottomBar(
                 navController = navController
             )
         }

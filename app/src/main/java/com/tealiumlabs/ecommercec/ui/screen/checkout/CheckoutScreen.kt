@@ -26,9 +26,9 @@ import com.tealiumlabs.ecommercec.model.CheckoutInfo
 import com.tealiumlabs.ecommercec.model.OutfitInCart
 import com.tealiumlabs.ecommercec.ui.components.CustomTextField
 import com.tealiumlabs.ecommercec.ui.navigation.Screen
-import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenBottomBar
-import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenTopAppBar
 import com.tealiumlabs.ecommercec.model.EcommViewModel
+import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
+import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.screen.product.Up
 import com.tealiumlabs.ecommercec.ui.theme.*
 
@@ -54,9 +54,8 @@ fun CheckoutScreen(
 
     Scaffold(
         topBar = {
-            HomeScreenTopAppBar(
+            GlobalTopAppBar(
                 navController = navController,
-                //outfitsInCart = viewModel.cartAddedOutfitList.size,
                 outfitsInCart = viewModel.cartAddedItemsTotalQty(),
                 emailAddress = viewModel.emailAddress,
             )
@@ -72,7 +71,7 @@ fun CheckoutScreen(
             }
         },
         bottomBar = {
-            HomeScreenBottomBar(
+            ScreenBottomBar(
                 navController = navController
             )
         },

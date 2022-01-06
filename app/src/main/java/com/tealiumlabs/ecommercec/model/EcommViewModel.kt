@@ -12,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EcommViewModel @Inject constructor(
     outfitRepository: OutfitRepository
-): ViewModel() {
+) : ViewModel() {
 
     val tealiumAccount = mutableStateOf("")
     val tealiumProfile = mutableStateOf("")
@@ -21,10 +21,10 @@ class EcommViewModel @Inject constructor(
 
     private var _outfitAdList = outfitRepository.getOutfitAdList(OutfitCategory.All)
     val outfitAdList: List<OutfitAd>
-    get() = _outfitAdList
+        get() = _outfitAdList
 
     private var _outfitList = outfitRepository.getOutfitList(OutfitCategory.All)
-    private val outfitList: List<Outfit>
+    val outfitList: List<Outfit>
         get() = _outfitList
 
     private var _outfitWomenList = outfitRepository.getOutfitList(OutfitCategory.Women)
@@ -47,29 +47,32 @@ class EcommViewModel @Inject constructor(
     val outfitSaleList: List<Outfit>
         get() = _outfitSaleList
 
-
     private var _outfitCampaignList = outfitRepository.getOutfitCampaign()
     val outfitCampaignList: List<OutfitCampaign>
-    get() = _outfitCampaignList
+        get() = _outfitCampaignList
 
     private var _outfitNewProductList = outfitRepository.getOutfitNewProductList()
     val outfitNewProductList: List<Outfit>
         get() = _outfitNewProductList
 
-//    private val _selectedTabIndex = MutableLiveData(OutfitCategory.All.index)
+    //    private val _selectedTabIndex = MutableLiveData(OutfitCategory.All.index)
 //    val selectedTabIndex: LiveData<Int>
 //    get() = _selectedTabIndex
     var selectedTabIndex = mutableStateOf(OutfitCategory.All.index)
-
-    fun onChangeSelectedTab(tabIndex: Int){
+    fun onChangeSelectedTab(tabIndex: Int) {
         selectedTabIndex.value = tabIndex
     }
+
     fun getSearchResults(query: String): List<Outfit> {
         val filteredOutfitList = mutableListOf<Outfit>()
 
-        if(query.isNotEmpty()){
+        if (query.isNotEmpty()) {
             outfitList.forEach { outfit ->
-                if(outfit.name.contains(query, ignoreCase = true) || outfit.description.contains(query, ignoreCase = true)) {
+                if (outfit.name.contains(query, ignoreCase = true) || outfit.description.contains(
+                        query,
+                        ignoreCase = true
+                    )
+                ) {
                     filteredOutfitList.add(outfit)
                 }
             }
@@ -78,22 +81,21 @@ class EcommViewModel @Inject constructor(
         return filteredOutfitList
     }
 
-    val favoriteOutfitList = mutableStateListOf(outfitList[0], outfitList[2]) // set default values for example
+    val favoriteOutfitList =
+        mutableStateListOf(outfitList[0], outfitList[2]) // set default values for example
 
     fun removeItemFromFavoriteOutfitList(outfit: Outfit) {
         favoriteOutfitList.remove(outfit)
     }
 
-    val searchedKeywords = mutableStateListOf("sweater","shirt")
-
+    val searchedKeywords = mutableStateListOf("sweater", "shirt")
     fun updateSearchKeywords(keyword: String) {
 
-        if(!searchedKeywords.contains(keyword)) {
+        if (!searchedKeywords.contains(keyword)) {
             if (searchedKeywords.size >= 8) {
                 searchedKeywords.removeAt(0)
                 searchedKeywords.add(keyword)
-            }
-            else {
+            } else {
                 searchedKeywords.add(keyword)
             }
         }
@@ -101,14 +103,13 @@ class EcommViewModel @Inject constructor(
 
     fun getOutfit(id: Long?): Outfit? {
 
-        return if(id == null) {
+        return if (id == null) {
             null
-        }
-        else {
+        } else {
             var i = 0
             run loop@{
                 outfitList.forEach {
-                    if(id == it.id) {
+                    if (id == it.id) {
                         return@loop
                     }
                     i++
@@ -137,7 +138,7 @@ class EcommViewModel @Inject constructor(
     fun orderTotal(): MutableState<Double> {
         val total = mutableStateOf(0.0)
         cartAddedOutfitList.forEach { outfitInCart ->
-           total.value += (outfitInCart.quantity * outfitInCart.outfit.price)
+            total.value += (outfitInCart.quantity * outfitInCart.outfit.price)
         }
         return total
     }

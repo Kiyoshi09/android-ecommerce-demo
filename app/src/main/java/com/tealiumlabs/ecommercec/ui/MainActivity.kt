@@ -38,10 +38,14 @@ class MainActivity : ComponentActivity() {
 
     @ExperimentalPagerApi
     @Composable
-    fun AppContent(splashScreenVisibleCondition: (SplashScreen.KeepOnScreenCondition) -> Unit) {
+    fun AppContent(
+        splashScreenVisibleCondition: (SplashScreen.KeepOnScreenCondition) -> Unit
+    ) {
         ECommerceCTheme {
             Surface {
-                EcommApp(splashScreenVisibleCondition)
+                EcommApp(
+                    splashScreenVisibleCondition = splashScreenVisibleCondition
+                )
             }
         }
     }

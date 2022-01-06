@@ -1,22 +1,26 @@
 package com.tealiumlabs.ecommercec.ui.screen.other
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Architecture
+import androidx.compose.material.icons.filled.Campaign
+import androidx.compose.material.icons.filled.DataUsage
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -30,10 +34,12 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.tealiumlabs.ecommercec.data.prefsStore.readTealiumAccountSettings
-import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenBottomBar
+import com.tealiumlabs.ecommercec.data.prefsStore.saveTealiumAccountSettings
 import com.tealiumlabs.ecommercec.model.EcommViewModel
-import com.tealiumlabs.ecommercec.ui.screen.home.TealiumProfileConfigureDialog
+import com.tealiumlabs.ecommercec.ui.components.CustomTextField
+import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.theme.*
+import kotlinx.coroutines.launch
 
 @Composable
 fun OtherScreen(
@@ -81,7 +87,7 @@ fun OtherScreen(
             )
         },
         bottomBar = {
-            HomeScreenBottomBar(
+            ScreenBottomBar(
                 navController = navController
             )
         }
@@ -569,5 +575,147 @@ private fun ConsentPreferenceCategory(
                 uiStatus.value = it
             }
         )
+    }
+}
+
+@Composable
+private fun TealiumProfileConfigureDialog(
+    openDialog: MutableState<Boolean>,
+    account: String,
+    profile: String,
+    dataSource: String,
+    environment: String,
+) {
+    val acct = remember { mutableStateOf(account) }
+    val prof = remember { mutableStateOf(profile) }
+    val ds = remember { mutableStateOf(dataSource) }
+    val env = remember { mutableStateOf(environment) }
+
+    val focusRequesters = List(6) { FocusRequester() }
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    if (openDialog.value) {
+
+        Dialog(
+            onDismissRequest = { openDialog.value = false }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .size(300.dp, 260.dp)
+                    .clip(RoundedCornerShape(5.dp))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize(),
+                ) {
+                    Text(
+                        text = "Tealium Account Information",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = EcommTypography.subtitle1.copy(fontSize = 16.sp),
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    CustomTextField(
+                        textValue = "Account",
+                        bgColor = colorTextBodyLight,
+                        stateValue = acct,
+                        focusRequestN = focusRequesters[0],
+                        focusRequestN1 = focusRequesters[1],
+                        fontSize = 16.sp,
+                        icon = Icons.Filled.AccountBox,
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    CustomTextField(
+                        textValue = "Profile",
+                        bgColor = colorTextBodyLight,
+                        stateValue = prof,
+                        focusRequestN = focusRequesters[1],
+                        focusRequestN1 = focusRequesters[2],
+                        fontSize = 16.sp,
+                        icon = Icons.Filled.Campaign,
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    CustomTextField(
+                        textValue = "DataSource",
+                        bgColor = colorTextBodyLight,
+                        stateValue = ds,
+                        focusRequestN = focusRequesters[2],
+                        focusRequestN1 = focusRequesters[3],
+                        fontSize = 16.sp,
+                        icon = Icons.Filled.DataUsage,
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    CustomTextField(
+                        textValue = "Environment",
+                        bgColor = colorTextBodyLight,
+                        stateValue = env,
+                        focusRequestN = focusRequesters[3],
+                        focusRequestN1 = focusRequesters[4],
+                        fontSize = 16.sp,
+                        icon = Icons.Filled.Architecture,
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.padding(4.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                acct.value = ""
+                                prof.value = ""
+                                ds.value = ""
+                                env.value = ""
+                            },
+                            modifier = Modifier
+                                .weight(0.5f)
+                                .padding(4.dp)
+                                .focusOrder(focusRequesters[4]) {
+                                }
+                        ) {
+                            Text("Clear")
+                        }
+
+                        Button(
+                            onClick = {
+                                val tealConfigStr = "${acct.value};${prof.value};${ds.value};${env.value}"
+
+                                scope.launch {
+                                    saveTealiumAccountSettings(
+                                        context = context,
+                                        tealConfig = tealConfigStr,
+                                    )
+                                }
+
+                                openDialog.value = false
+                            },
+                            modifier = Modifier
+                                .weight(0.5f)
+                                .padding(4.dp)
+                                .focusOrder(focusRequesters[5]) {
+                                }
+                        ) {
+                            Text("Save")
+                        }
+
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+            }
+        }
     }
 }

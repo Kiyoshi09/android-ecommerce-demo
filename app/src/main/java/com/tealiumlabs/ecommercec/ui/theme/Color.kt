@@ -28,8 +28,8 @@ val imageBackgroundTintDark = Color(0xFF006064)
 
 val _veryLightGray = Color(0x60DCDCDC)
 val veryLighGray: Color
-@Composable
-get() = _veryLightGray
+    @Composable
+    get() = _veryLightGray
 
 val Shadow11 = Color(0xff001787)
 val Shadow10 = Color(0xff00119e)

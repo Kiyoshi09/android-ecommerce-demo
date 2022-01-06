@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.tealiumlabs.ecommercec.model.EcommViewModel
 import com.tealiumlabs.ecommercec.model.Outfit
+import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
+import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.screen.home.*
 import com.tealiumlabs.ecommercec.ui.theme.*
 import kotlinx.coroutines.delay
@@ -36,7 +38,7 @@ fun SearchScreen(
 ) {
     Scaffold(
         topBar = {
-            HomeScreenTopAppBar(
+            GlobalTopAppBar(
                 navController = navController,
                 outfitsInCart = viewModel.cartAddedItemsTotalQty(),
                 emailAddress = viewModel.emailAddress
@@ -54,7 +56,7 @@ fun SearchScreen(
             }
         },
         bottomBar = {
-            HomeScreenBottomBar(
+            ScreenBottomBar(
                 navController = navController
             )
         }

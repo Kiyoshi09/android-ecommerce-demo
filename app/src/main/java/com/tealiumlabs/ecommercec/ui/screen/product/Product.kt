@@ -26,9 +26,9 @@ import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.model.OutfitInCart
 import com.tealiumlabs.ecommercec.ui.components.FavoriteButton
 import com.tealiumlabs.ecommercec.ui.components.QuantitySelector
-import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenTopAppBar
 import com.tealiumlabs.ecommercec.model.EcommViewModel
-import com.tealiumlabs.ecommercec.ui.screen.home.OutfitImage
+import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
+import com.tealiumlabs.ecommercec.ui.components.OutfitImage
 import com.tealiumlabs.ecommercec.ui.theme.*
 import kotlin.math.max
 import kotlin.math.min
@@ -54,9 +54,8 @@ fun ProductScreen(
 
     Scaffold(
         topBar = {
-            HomeScreenTopAppBar(
+            GlobalTopAppBar(
                 navController = navController,
-                //outfitsInCart = viewModel.cartAddedOutfitList.size,
                 outfitsInCart = viewModel.cartAddedItemsTotalQty(),
                 emailAddress = viewModel.emailAddress,
             )

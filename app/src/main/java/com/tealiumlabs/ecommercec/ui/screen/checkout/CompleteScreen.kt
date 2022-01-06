@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.tealiumlabs.ecommercec.ui.screen.home.HomeScreenBottomBar
 import com.tealiumlabs.ecommercec.model.EcommViewModel
+import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.theme.EcommTypography
 import com.tealiumlabs.ecommercec.ui.theme.Ocean8
 import com.tealiumlabs.ecommercec.ui.theme.veryLighGray
@@ -55,7 +55,7 @@ fun CompleteScreen(
             }
         },
         bottomBar = {
-            HomeScreenBottomBar(
+            ScreenBottomBar(
                 navController = navController
             )
         }
