@@ -2,30 +2,19 @@ package com.tealiumlabs.ecommercec.ui.screen.home
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.*
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.tealiumlabs.ecommercec.data.prefsStore.readTealiumAccountSettings
-import com.tealiumlabs.ecommercec.data.prefsStore.saveTealiumAccountSettings
 import com.tealiumlabs.ecommercec.model.*
-import com.tealiumlabs.ecommercec.ui.components.CustomTextField
 import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
 import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.screen.search.GlobalSearch
@@ -34,7 +23,6 @@ import com.tealiumlabs.ecommercec.ui.screen.search.SearchState
 import com.tealiumlabs.ecommercec.ui.screen.search.rememberSearchState
 import com.tealiumlabs.ecommercec.ui.theme.*
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
@@ -253,8 +241,3 @@ private fun CategoryTabs(
         }
     }
 }
-
-
-
-
-

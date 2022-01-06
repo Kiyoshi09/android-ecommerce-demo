@@ -41,11 +41,11 @@ android {
         compose true
 
         // Disable unused AGP features
-        buildConfig false
-        aidl false
-        renderScript false
-        resValues false
-        shaders false
+//        buildConfig false
+//        aidl false
+//        renderScript false
+//        resValues false
+//        shaders false
     }
 
     composeOptions {
@@ -53,10 +53,14 @@ android {
     }
 
     packagingOptions {
-        // Multiple dependency bring these files in. Exclude them to enable
-        // our test APK to build (has no effect on our AARs)
-        excludes += "/META-INF/AL2.0"
-        excludes += "/META-INF/LGPL2.1"
+//        // Multiple dependency bring these files in. Exclude them to enable
+//        // our test APK to build (has no effect on our AARs)
+//        excludes += "/META-INF/AL2.0"
+//        excludes += "/META-INF/LGPL2.1"
+
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 }
 
@@ -66,13 +70,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation "androidx.activity:activity-compose:1.4.0"
     implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-util:1.0.5"
-    implementation "androidx.compose.material:material:1.0.5"
-    implementation "androidx.compose.material:material-icons-extended:1.0.5"
-    implementation "androidx.compose.ui:ui-tooling:1.0.5"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+    implementation "androidx.compose.ui:ui-util:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
 
     // navigation compose (** don't update **)
     implementation "androidx.navigation:navigation-compose:1.0.0-alpha01"
@@ -83,7 +85,9 @@ dependencies {
 
     // viewmodel and livedata
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     implementation "androidx.compose.runtime:runtime-livedata:1.0.5"
 
     //dagger hilt
