@@ -3,9 +3,18 @@ package com.tealiumlabs.ecommercec.model
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tealiumlabs.ecommercec.data.prefsStore.readTealiumAccountSettings
 import com.tealiumlabs.ecommercec.data.repositories.OutfitRepository
+import com.tealiumlabs.ecommercec.utils.RequestState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 

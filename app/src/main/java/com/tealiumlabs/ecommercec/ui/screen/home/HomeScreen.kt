@@ -1,5 +1,7 @@
 package com.tealiumlabs.ecommercec.ui.screen.home
 
+import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -15,6 +17,8 @@ import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.tealiumlabs.ecommercec.data.prefsStore.readTealiumAccountSettings
 import com.tealiumlabs.ecommercec.model.*
+import com.tealiumlabs.ecommercec.tealium.TealiumHelper
+import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
 import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.screen.search.GlobalSearch
@@ -31,26 +35,22 @@ fun HomeScreen(
     navController: NavController,
     state: SearchState<Outfit> = rememberSearchState()
 ) {
-    //val selectedTabIndex: Int by viewModel.selectedTabIndex.observeAsState(initial = OutfitCategory.All.index)
     val selectedTabIndex: Int = viewModel.selectedTabIndex.value
 
-    val tealConfigStr = readTealiumAccountSettings(LocalContext.current).collectAsState(initial = ";;;").value
-    val acct = tealConfigStr.split(";")[0]
-    val prof = tealConfigStr.split(";")[1]
-    val ds = tealConfigStr.split(";")[2]
-    val env = tealConfigStr.split(";")[3]
+    val context = LocalContext.current
+    val tealConfigStr =
+        readTealiumAccountSettings(context = context).collectAsState(initial = ";;;").value
 
-    viewModel.tealiumAccount.value = acct
-    viewModel.tealiumProfile.value = prof
-    viewModel.tealiumDataSource.value = ds
-    viewModel.tealiumEnvironment.value = env
+    LaunchedEffect(key1 = tealConfigStr){
+        var currentTealiumHelper =
+            TealiumHelperList.request(
+                application = context.applicationContext as Application,
+                name = tealConfigStr,
+                viewModel = viewModel,
+            )
 
-//    Log.d("KIYOSHI-TEAL", "[tealium settings] " +
-//            "account:${viewModel.tealiumAccount.value}, " +
-//            "profile:${viewModel.tealiumProfile.value}, " +
-//            "dataSource:${viewModel.tealiumDataSource.value}, " +
-//            "environment:${viewModel.tealiumEnvironment.value}"
-//    )
+        Log.d("KIYOSHI-TEAL", "current Tealium Helper : ${currentTealiumHelper?.name}")
+    }
 
     Scaffold(
         topBar = {

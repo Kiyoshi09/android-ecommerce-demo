@@ -1,5 +1,6 @@
 package com.tealiumlabs.ecommercec.ui.screen.other
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -52,6 +53,8 @@ fun OtherScreen(
     val prof = tealConfigStr.split(";")[1]
     val ds = tealConfigStr.split(";")[2]
     val env = tealConfigStr.split(";")[3]
+
+    Log.d("KIYOSHI-TEALINFO", "$acct, $prof, $env, $ds")
 
     viewModel.tealiumAccount.value = acct
     viewModel.tealiumProfile.value = prof

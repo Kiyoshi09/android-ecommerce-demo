@@ -15,6 +15,11 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField 'String', 'TAG', "\"Tealium App\""
+        buildConfigField 'String', 'TEALIUM_INSTANCE', "\"main\""
+//        buildConfigField 'Boolean', 'AUTO_TRACKING', "true"
+//        buildConfigField 'Boolean', 'AUTO_TRACKING_PUSH_ENABLED', "false"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -132,4 +137,32 @@ dependencies {
 
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.16.1'
+
+    // Tealium Kotlin SDK : Core
+    implementation 'com.tealium:kotlin-core:1.2.8'
+    // Tealium Kotlin SDK : AdId
+    //implementation 'com.tealium:kotlin-ad-identifier:1.0.2'
+    //implementation 'com.google.android.gms:play-services-location:19.0.1'
+    // Tealium Kotlin SDK : Collect
+    implementation 'com.tealium:kotlin-collect-dispatcher:1.0.6'
+    // Tealium Kotlin SDK : CrashReport
+    implementation 'com.tealium:kotlin-crash-reporter:1.0.3'
+    // Tealium Kotlin SDK : Installer Referrer
+    implementation 'com.tealium:kotlin-install-referrer:1.0.3'
+    implementation 'com.tealium:kotlin-lifecycle:1.0.5'
+    implementation 'com.android.installreferrer:installreferrer:2.2'
+    // Tealium Kotlin SDK : LifeCycle Tracking
+    implementation 'com.tealium:kotlin-lifecycle:1.0.5'
+    // Tealium Kotlin SDK : Location
+    implementation 'com.tealium:kotlin-location:1.0.5'
+    runtimeOnly 'com.google.android.gms:play-services-location:19.0.1'
+    // Tealium Kotlin SDK : Media
+    implementation 'com.tealium:kotlin-media:1.0.0'
+    // Tealium Kotlin SDK : RemoteCommand
+    implementation 'com.tealium:kotlin-remotecommand-dispatcher:1.0.5'
+    // Tealium Kotlin SDK : TagManager
+    implementation 'com.tealium:kotlin-tagmanagement-dispatcher:1.0.7'
+    // Tealium Kotlin SDK : VisitorService
+    implementation 'com.tealium:kotlin-visitor-service:1.0.5'
+
 }
