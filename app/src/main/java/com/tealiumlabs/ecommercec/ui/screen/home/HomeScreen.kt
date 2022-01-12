@@ -15,9 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.tealiumlabs.ecommercec.data.prefsStore.readTealiumAccountSettings
 import com.tealiumlabs.ecommercec.model.*
-import com.tealiumlabs.ecommercec.tealium.TealiumHelper
 import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
 import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
@@ -26,6 +24,7 @@ import com.tealiumlabs.ecommercec.ui.screen.search.SearchDisplay
 import com.tealiumlabs.ecommercec.ui.screen.search.SearchState
 import com.tealiumlabs.ecommercec.ui.screen.search.rememberSearchState
 import com.tealiumlabs.ecommercec.ui.theme.*
+import com.tealiumlabs.ecommercec.utils.RequestState
 import kotlinx.coroutines.delay
 
 @ExperimentalPagerApi
@@ -37,20 +36,16 @@ fun HomeScreen(
 ) {
     val selectedTabIndex: Int = viewModel.selectedTabIndex.value
 
-    val context = LocalContext.current
-    val tealConfigStr =
-        readTealiumAccountSettings(context = context).collectAsState(initial = ";;;").value
+    LaunchedEffect(key1 = true) {
+        viewModel.readTealiumConfigState()
 
-    LaunchedEffect(key1 = tealConfigStr){
-        var currentTealiumHelper =
-            TealiumHelperList.request(
-                application = context.applicationContext as Application,
-                name = tealConfigStr,
-                viewModel = viewModel,
-            )
-
-        Log.d("KIYOSHI-TEAL", "current Tealium Helper : ${currentTealiumHelper?.name}")
+        Log.d("KIYOSHI-TEALIUM_CONFIG", "---- read config from datastore ---")
     }
+
+    val tealiumConfigState by viewModel.tealiumConfigState.collectAsState()
+    Log.d("KIYOSHI-TEALIUM_CONFIG", "config : ${tealiumConfigState.toString()}")
+
+    UpdateTealiumHelper(tealiumConfigState = tealiumConfigState)
 
     Scaffold(
         topBar = {
@@ -176,7 +171,6 @@ private fun HomeScreenBody(
             SearchDisplay.Results -> {
                 LaunchedEffect(Unit) {
                     delay(1500)
-                    //updateSearchKeywords(state.query.text)
                     viewModel.updateSearchKeywords(state.query.text)
                 }
 
@@ -239,5 +233,21 @@ private fun CategoryTabs(
         SearchDisplay.Results -> {
 
         }
+    }
+}
+
+@Composable
+private fun UpdateTealiumHelper(
+    tealiumConfigState: RequestState<String>,
+) {
+    val context = LocalContext.current
+
+    if (tealiumConfigState is RequestState.Success) {
+        val s = tealiumConfigState.data
+
+        TealiumHelperList.update(
+            application = context.applicationContext as Application,
+            name = s,
+        )
     }
 }

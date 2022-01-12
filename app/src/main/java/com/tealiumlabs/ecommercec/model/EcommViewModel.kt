@@ -3,16 +3,17 @@ package com.tealiumlabs.ecommercec.model
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tealiumlabs.ecommercec.data.prefsStore.readTealiumAccountSettings
+import com.tealiumlabs.ecommercec.data.repositories.DataStoreRepository
 import com.tealiumlabs.ecommercec.data.repositories.OutfitRepository
 import com.tealiumlabs.ecommercec.utils.RequestState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
@@ -20,13 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EcommViewModel @Inject constructor(
-    outfitRepository: OutfitRepository
+    outfitRepository: OutfitRepository,
+    private val dataStoredRepository: DataStoreRepository,
 ) : ViewModel() {
-
-    val tealiumAccount = mutableStateOf("")
-    val tealiumProfile = mutableStateOf("")
-    val tealiumDataSource = mutableStateOf("")
-    val tealiumEnvironment = mutableStateOf("")
 
     private var _outfitAdList = outfitRepository.getOutfitAdList(OutfitCategory.All)
     val outfitAdList: List<OutfitAd>
@@ -150,6 +147,31 @@ class EcommViewModel @Inject constructor(
             total.value += (outfitInCart.quantity * outfitInCart.outfit.price)
         }
         return total
+    }
+
+    fun persistTealiumConfigState(tealiumConfig: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoredRepository.persistTealiumConfig(config = tealiumConfig)
+        }
+    }
+
+    private val _tealiumConfigState = MutableStateFlow<RequestState<String>>(RequestState.Idle)
+    val tealiumConfigState: StateFlow<RequestState<String>> = _tealiumConfigState
+
+    fun readTealiumConfigState() {
+        _tealiumConfigState.value = RequestState.Loading
+
+        try {
+            viewModelScope.launch {
+                dataStoredRepository.readTealiumConfig
+                    .map { it }
+                    .collect {
+                        _tealiumConfigState.value = RequestState.Success(it)
+                    }
+            }
+        } catch (e: Exception) {
+            _tealiumConfigState.value = RequestState.Error(e)
+        }
     }
 
     var emailAddress = mutableStateOf("")

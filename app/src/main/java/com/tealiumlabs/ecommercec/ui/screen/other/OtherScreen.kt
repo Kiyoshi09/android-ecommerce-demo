@@ -1,5 +1,6 @@
 package com.tealiumlabs.ecommercec.ui.screen.other
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -34,32 +35,20 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.tealiumlabs.ecommercec.data.prefsStore.readTealiumAccountSettings
-import com.tealiumlabs.ecommercec.data.prefsStore.saveTealiumAccountSettings
 import com.tealiumlabs.ecommercec.model.EcommViewModel
+import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.CustomTextField
 import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.theme.*
-import kotlinx.coroutines.launch
+import com.tealiumlabs.ecommercec.utils.RequestState
 
 @Composable
 fun OtherScreen(
     viewModel: EcommViewModel,
     navController: NavController,
 ) {
-    val tealConfigStr =
-        readTealiumAccountSettings(LocalContext.current).collectAsState(initial = ";;;").value
-    val acct = tealConfigStr.split(";")[0]
-    val prof = tealConfigStr.split(";")[1]
-    val ds = tealConfigStr.split(";")[2]
-    val env = tealConfigStr.split(";")[3]
-
-    Log.d("KIYOSHI-TEALINFO", "$acct, $prof, $env, $ds")
-
-    viewModel.tealiumAccount.value = acct
-    viewModel.tealiumProfile.value = prof
-    viewModel.tealiumDataSource.value = ds
-    viewModel.tealiumEnvironment.value = env
+    val tealiumConfigState by viewModel.tealiumConfigState.collectAsState()
+    Log.d("KIYOSHI-TEALIUM_CONFIG", "config - OtherScreen : ${tealiumConfigState.toString()}")
 
     Scaffold(
         topBar = {
@@ -67,26 +56,8 @@ fun OtherScreen(
         },
         content = {
             OtherScreenContent(
-                account = acct,
-                profile = prof,
-                dataSource = ds,
-                environment = env,
-                isOptIn = viewModel.isOptIn,
-                consentAnalytics = viewModel.consentAnalytics,
-                consentAffiliate = viewModel.consentAffiliate,
-                consentDisplayAd = viewModel.consentDisplayAd,
-                consentSearch = viewModel.consentSearch,
-                consentEmail = viewModel.consentEmail,
-                consentPersonalization = viewModel.consentPersonalization,
-                consentSocial = viewModel.consentSocial,
-                consentBigData = viewModel.consentBigData,
-                consentMisc = viewModel.consentMisc,
-                consentCookieMatch = viewModel.consentCookieMatch,
-                consentCDP = viewModel.consentCDP,
-                consentMobile = viewModel.consentMobile,
-                consentEngagement = viewModel.consentEngagement,
-                consentMonitoring = viewModel.consentMonitoring,
-                consentCRM = viewModel.consentCRM,
+                viewModel = viewModel,
+                tealiumConfigState = tealiumConfigState,
             )
         },
         bottomBar = {
@@ -142,26 +113,8 @@ private fun OtherTopContent() {
 
 @Composable
 private fun OtherScreenContent(
-    account: String,
-    profile: String,
-    dataSource: String,
-    environment: String,
-    isOptIn: MutableState<Boolean>,
-    consentAnalytics: MutableState<Boolean>,
-    consentAffiliate: MutableState<Boolean>,
-    consentDisplayAd: MutableState<Boolean>,
-    consentSearch: MutableState<Boolean>,
-    consentEmail: MutableState<Boolean>,
-    consentPersonalization: MutableState<Boolean>,
-    consentSocial: MutableState<Boolean>,
-    consentBigData: MutableState<Boolean>,
-    consentMisc: MutableState<Boolean>,
-    consentCookieMatch: MutableState<Boolean>,
-    consentCDP: MutableState<Boolean>,
-    consentMobile: MutableState<Boolean>,
-    consentEngagement: MutableState<Boolean>,
-    consentMonitoring: MutableState<Boolean>,
-    consentCRM: MutableState<Boolean>,
+    viewModel: EcommViewModel,
+    tealiumConfigState: RequestState<String>,
 ) {
     val openTealConfigDialog = remember { mutableStateOf(false) }
     val openConsentMgrDialog = remember { mutableStateOf(false) }
@@ -203,10 +156,10 @@ private fun OtherScreenContent(
         if (openTealConfigDialog.value) {
             TealiumProfileConfigureDialog(
                 openDialog = openTealConfigDialog,
-                account = account,
-                profile = profile,
-                dataSource = dataSource,
-                environment = environment,
+                onSaveClicked = {
+                    viewModel.persistTealiumConfigState(it)
+                },
+                tealiumConfigState = tealiumConfigState,
             )
         }
 
@@ -284,23 +237,8 @@ private fun OtherScreenContent(
 
         if (openConsentMgrDialog.value) {
             ConsentMgrDialog(
+                viewModel = viewModel,
                 openDialog = openConsentMgrDialog,
-                isOptIn = isOptIn,
-                consentAnalytics = consentAnalytics,
-                consentAffiliate = consentAffiliate,
-                consentDisplayAd = consentDisplayAd,
-                consentSearch = consentSearch,
-                consentEmail = consentEmail,
-                consentPersonalization = consentPersonalization,
-                consentSocial = consentSocial,
-                consentBigData = consentBigData,
-                consentMisc = consentMisc,
-                consentCookieMatch = consentCookieMatch,
-                consentCDP = consentCDP,
-                consentMobile = consentMobile,
-                consentEngagement = consentEngagement,
-                consentMonitoring = consentMonitoring,
-                consentCRM = consentCRM,
             )
         }
 
@@ -312,47 +250,32 @@ private fun OtherScreenContent(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ConsentMgrDialog(
+    viewModel: EcommViewModel,
     openDialog: MutableState<Boolean>,
-    isOptIn: MutableState<Boolean>,
-    consentAnalytics: MutableState<Boolean>,
-    consentAffiliate: MutableState<Boolean>,
-    consentDisplayAd: MutableState<Boolean>,
-    consentSearch: MutableState<Boolean>,
-    consentEmail: MutableState<Boolean>,
-    consentPersonalization: MutableState<Boolean>,
-    consentSocial: MutableState<Boolean>,
-    consentBigData: MutableState<Boolean>,
-    consentMisc: MutableState<Boolean>,
-    consentCookieMatch: MutableState<Boolean>,
-    consentCDP: MutableState<Boolean>,
-    consentMobile: MutableState<Boolean>,
-    consentEngagement: MutableState<Boolean>,
-    consentMonitoring: MutableState<Boolean>,
-    consentCRM: MutableState<Boolean>,
 ) {
-    val optInOut = remember { mutableStateOf(isOptIn.value) }
+    val optInOut = remember { viewModel.isOptIn }
     val height1 = 680.dp
     val height2 = 170.dp
 
-    val cAnalytics = remember { mutableStateOf(consentAnalytics.value) }
-    val cAffiliate = remember { mutableStateOf(consentAffiliate.value) }
-    val cDisplayAd = remember { mutableStateOf(consentDisplayAd.value) }
-    val cSearch = remember { mutableStateOf(consentSearch.value) }
-    val cEmail = remember { mutableStateOf(consentEmail.value) }
-    val cPersonalization = remember { mutableStateOf(consentPersonalization.value) }
-    val cSocial = remember { mutableStateOf(consentSocial.value) }
-    val cBigData = remember { mutableStateOf(consentBigData.value) }
-    val cMisc = remember { mutableStateOf(consentMisc.value) }
-    val cCookieMatch = remember { mutableStateOf(consentCookieMatch.value) }
-    val cCdp = remember { mutableStateOf(consentCDP.value) }
-    val cMobile = remember { mutableStateOf(consentMobile.value) }
-    val cEngagement = remember { mutableStateOf(consentEngagement.value) }
-    val cMonitoring = remember { mutableStateOf(consentMonitoring.value) }
-    val cCrm = remember { mutableStateOf(consentCRM.value) }
+    val cAnalytics = remember { viewModel.consentAnalytics }
+    val cAffiliate = remember { viewModel.consentAffiliate }
+    val cDisplayAd = remember { viewModel.consentDisplayAd }
+    val cSearch = remember { viewModel.consentSearch }
+    val cEmail = remember { viewModel.consentEmail }
+    val cPersonalization = remember { viewModel.consentPersonalization }
+    val cSocial = remember { viewModel.consentSocial }
+    val cBigData = remember { viewModel.consentBigData }
+    val cMisc = remember { viewModel.consentMisc }
+    val cCookieMatch = remember { viewModel.consentCookieMatch }
+    val cCdp = remember { viewModel.consentCDP }
+    val cMobile = remember { viewModel.consentMobile }
+    val cEngagement = remember { viewModel.consentEngagement }
+    val cMonitoring = remember { viewModel.consentMonitoring }
+    val cCrm = remember { viewModel.consentCRM }
 
     val dialogHeight = remember {
         mutableStateOf(
-            if (optInOut.value) {
+            if (viewModel.isOptIn.value) {
                 height1
             } else {
                 height2
@@ -404,7 +327,7 @@ fun ConsentMgrDialog(
                         modifier = Modifier
                             .weight(2f)
                             .padding(top = 8.dp),
-                        checked = optInOut.value,
+                        checked = viewModel.isOptIn.value,
                         onCheckedChange = {
                             optInOut.value = it
 
@@ -438,7 +361,7 @@ fun ConsentMgrDialog(
 
                         ConsentPreferenceCategory(
                             categoryName = "Analytics",
-                            uiStatus = cAnalytics
+                            uiStatus = cAnalytics,
                         )
 
                         ConsentPreferenceCategory(
@@ -522,22 +445,22 @@ fun ConsentMgrDialog(
                 ) {
                     Button(
                         onClick = {
-                            isOptIn.value = optInOut.value
-                            consentAnalytics.value = cAnalytics.value
-                            consentAffiliate.value = cAffiliate.value
-                            consentDisplayAd.value = cDisplayAd.value
-                            consentSearch.value = cSearch.value
-                            consentEmail.value = cEmail.value
-                            consentPersonalization.value = cPersonalization.value
-                            consentSocial.value = cSocial.value
-                            consentBigData.value = cBigData.value
-                            consentMisc.value = cMisc.value
-                            consentCookieMatch.value = cCookieMatch.value
-                            consentCDP.value = cCdp.value
-                            consentMobile.value = cMobile.value
-                            consentEngagement.value = cEngagement.value
-                            consentMonitoring.value = cMonitoring.value
-                            consentCRM.value = cCrm.value
+                            viewModel.isOptIn.value = optInOut.value
+                            viewModel.consentAnalytics.value = cAnalytics.value
+                            viewModel.consentAffiliate.value = cAffiliate.value
+                            viewModel.consentDisplayAd.value = cDisplayAd.value
+                            viewModel.consentSearch.value = cSearch.value
+                            viewModel.consentEmail.value = cEmail.value
+                            viewModel.consentPersonalization.value = cPersonalization.value
+                            viewModel.consentSocial.value = cSocial.value
+                            viewModel.consentBigData.value = cBigData.value
+                            viewModel.consentMisc.value = cMisc.value
+                            viewModel.consentCookieMatch.value = cCookieMatch.value
+                            viewModel.consentCDP.value = cCdp.value
+                            viewModel.consentMobile.value = cMobile.value
+                            viewModel.consentEngagement.value = cEngagement.value
+                            viewModel.consentMonitoring.value = cMonitoring.value
+                            viewModel.consentCRM.value = cCrm.value
 
                             openDialog.value = false
                         },
@@ -584,20 +507,29 @@ private fun ConsentPreferenceCategory(
 @Composable
 private fun TealiumProfileConfigureDialog(
     openDialog: MutableState<Boolean>,
-    account: String,
-    profile: String,
-    dataSource: String,
-    environment: String,
+    onSaveClicked : (String) -> Unit,
+    tealiumConfigState: RequestState<String>,
 ) {
-    val acct = remember { mutableStateOf(account) }
-    val prof = remember { mutableStateOf(profile) }
-    val ds = remember { mutableStateOf(dataSource) }
-    val env = remember { mutableStateOf(environment) }
+    val acct = remember { mutableStateOf("") }
+    val prof = remember { mutableStateOf("") }
+    val ds = remember { mutableStateOf("") }
+    val env = remember { mutableStateOf("") }
+
+    if(tealiumConfigState is RequestState.Success) {
+        val s = tealiumConfigState.data
+
+        if(s.contains(";")
+            && s.split(";").size == 4){
+
+            acct.value = s.split(";")[0]
+            prof.value = s.split(";")[1]
+            ds.value = s.split(";")[2]
+            env.value = s.split(";")[3]
+        }
+    }
 
     val focusRequesters = List(6) { FocusRequester() }
-
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     if (openDialog.value) {
 
@@ -695,12 +627,11 @@ private fun TealiumProfileConfigureDialog(
                             onClick = {
                                 val tealConfigStr = "${acct.value};${prof.value};${ds.value};${env.value}"
 
-                                scope.launch {
-                                    saveTealiumAccountSettings(
-                                        context = context,
-                                        tealConfig = tealConfigStr,
-                                    )
-                                }
+                                onSaveClicked(tealConfigStr)
+                                TealiumHelperList.update(
+                                    application = context.applicationContext as Application,
+                                    name = tealConfigStr,
+                                )
 
                                 openDialog.value = false
                             },
