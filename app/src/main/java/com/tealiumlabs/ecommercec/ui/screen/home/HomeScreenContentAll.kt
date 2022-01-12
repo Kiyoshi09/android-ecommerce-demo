@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,6 +24,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.model.OutfitAd
 import com.tealiumlabs.ecommercec.model.OutfitCampaign
@@ -104,7 +106,7 @@ fun HomeScreenContentAll(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "NEW PRODUCTS",
+                        text = stringResource(id = R.string.new_products),
                         style = EcommTypography.subtitle2
                     )
                 }

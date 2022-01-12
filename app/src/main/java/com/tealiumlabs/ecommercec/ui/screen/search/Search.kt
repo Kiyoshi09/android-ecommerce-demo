@@ -19,7 +19,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.ui.theme.veryLighGray
 
@@ -172,7 +174,7 @@ fun SearchHint(modifier: Modifier = Modifier) {
     ) {
         Text(
             color = Color(0xff757575),
-            text = "Search a Name or Description",
+            text = stringResource(id = R.string.search_name_description),
         )
     }
 }

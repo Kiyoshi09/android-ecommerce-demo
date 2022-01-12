@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tealiumlabs.ecommercec.data.repositories.DataStoreRepository
 import com.tealiumlabs.ecommercec.data.repositories.OutfitRepository
+import com.tealiumlabs.ecommercec.utils.Constants.DEFAULT_SEARCH_KEYWORD1
+import com.tealiumlabs.ecommercec.utils.Constants.DEFAULT_SEARCH_KEYWORD2
 import com.tealiumlabs.ecommercec.utils.RequestState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -94,7 +96,7 @@ class EcommViewModel @Inject constructor(
         favoriteOutfitList.remove(outfit)
     }
 
-    val searchedKeywords = mutableStateListOf("sweater", "shirt")
+    val searchedKeywords = mutableStateListOf(DEFAULT_SEARCH_KEYWORD1, DEFAULT_SEARCH_KEYWORD2)
     fun updateSearchKeywords(keyword: String) {
 
         if (!searchedKeywords.contains(keyword)) {

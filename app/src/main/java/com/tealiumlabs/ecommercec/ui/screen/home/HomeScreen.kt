@@ -1,7 +1,6 @@
 package com.tealiumlabs.ecommercec.ui.screen.home
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -10,11 +9,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.*
 import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
@@ -38,12 +39,9 @@ fun HomeScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.readTealiumConfigState()
-
-        Log.d("KIYOSHI-TEALIUM_CONFIG", "---- read config from datastore ---")
     }
 
     val tealiumConfigState by viewModel.tealiumConfigState.collectAsState()
-    Log.d("KIYOSHI-TEALIUM_CONFIG", "config : ${tealiumConfigState.toString()}")
 
     UpdateTealiumHelper(tealiumConfigState = tealiumConfigState)
 
@@ -164,7 +162,7 @@ private fun HomeScreenBody(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No Results", fontSize = 24.sp, color = colorTextBody)
+                    Text(stringResource(id = R.string.no_result), fontSize = 24.sp, color = colorTextBody)
                 }
             }
 

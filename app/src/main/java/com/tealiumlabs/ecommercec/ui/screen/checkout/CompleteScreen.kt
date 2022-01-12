@@ -8,9 +8,11 @@ import androidx.compose.material.icons.filled.TaskAlt
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.EcommViewModel
 import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.theme.EcommTypography
@@ -33,14 +35,14 @@ fun CompleteScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "YOUR ORDER HAS BEEN RECEIVED",
+                    text = stringResource(id = R.string.order_received),
                     style = EcommTypography.subtitle1.copy(fontSize = 20.sp)
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                   text = "THANK YOU FOR YOUR PURCHASE!",
+                   text = stringResource(id = R.string.thank_you),
                    style = EcommTypography.body1.copy(fontSize = 20.sp)
                 )
 
@@ -83,7 +85,7 @@ private fun CompleteScreenTopAppBar(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Tealium Commerce",
+                text = stringResource(id = R.string.tealium_ecommerce),
                 Modifier.padding(20.dp, 8.dp, 0.dp, 0.dp),
                 style = EcommTypography.subtitle1.copy(
                     fontSize = 18.sp

@@ -4,8 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.navigation.NavController
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.tealiumlabs.ecommercec.model.EcommViewModel
@@ -16,6 +16,7 @@ import com.tealiumlabs.ecommercec.ui.theme._veryLightGray
 @ExperimentalAnimationApi
 @Composable
 fun EcommNavigation(
+    navController: NavHostController,
     viewModel: EcommViewModel,
 ) {
     val systemUiController = rememberSystemUiController()
@@ -25,8 +26,7 @@ fun EcommNavigation(
         )
     }
 
-    val navController = rememberAnimatedNavController()
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
         startDestination = Screen.Home.route,
     ) {

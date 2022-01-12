@@ -5,6 +5,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.tealiumlabs.ecommercec.utils.Constants.PREFERENCE_KEY
+import com.tealiumlabs.ecommercec.utils.Constants.PREFERENCE_NAME
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
@@ -13,14 +15,14 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
-val Context.dataStore by preferencesDataStore(name = "tealium_settings")
+val Context.dataStore by preferencesDataStore(name = PREFERENCE_NAME)
 
 @ViewModelScoped
 class DataStoreRepository @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
     private object PreferenceKeys {
-        val tealiumConfig = stringPreferencesKey(name = "tealium_account_config")
+        val tealiumConfig = stringPreferencesKey(name = PREFERENCE_KEY)
     }
 
     private val dataStore = context.dataStore

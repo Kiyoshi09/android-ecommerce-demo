@@ -17,10 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
 import com.tealiumlabs.ecommercec.model.EcommViewModel
@@ -82,7 +84,7 @@ private fun FavoriteScreenContent(
                     .fillMaxWidth(),
             ) {
                 Text(
-                    text = "My Favorites",
+                    text = stringResource(id = R.string.my_favorite),
                     style = EcommTypography.subtitle2
                 )
             }

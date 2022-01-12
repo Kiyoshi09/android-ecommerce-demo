@@ -1,6 +1,5 @@
 package com.tealiumlabs.ecommercec.ui.screen.search
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,6 +14,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.EcommViewModel
 import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
@@ -80,8 +81,6 @@ fun SearchScreenContent(
         GlobalSearch(state)
 
         LaunchedEffect(key1 = state.query){
-            Log.i("Kiyoshi", "Launched Effect : ${state.query.text}")
-
             delay(100)
             state.searchResults = outfitSearchResultList
             state.searching = false
@@ -90,8 +89,6 @@ fun SearchScreenContent(
         // Main Content
         when (state.searchDisplay) {
             SearchDisplay.InitialResults -> {
-                Log.i("Kiyoshi", "Search Display InitialResults")
-
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -103,7 +100,7 @@ fun SearchScreenContent(
                             .padding(start = 16.dp, top = 12.dp, bottom = 8.dp, end = 8.dp)
                     ) {
                         Text(
-                            text = "Keyword History",
+                            text = stringResource(id = R.string.keyword_history),
                             style = TextStyle(
                                fontSize = 18.sp,
                                fontWeight = FontWeight.SemiBold,
@@ -151,19 +148,17 @@ fun SearchScreenContent(
             }
 
             SearchDisplay.NoResults -> {
-                Log.i("Kiyoshi", "Search Display NoResults")
                 Box(
                     modifier = Modifier
                         .padding(top = 16.dp)
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No Results", fontSize = 24.sp, color = colorTextBody)
+                    Text(stringResource(id = R.string.no_result), fontSize = 24.sp, color = colorTextBody)
                 }
             }
 
             SearchDisplay.Results -> {
-                Log.i("Kiyoshi", "Search Display Results")
 
                 LaunchedEffect(Unit){
                    delay(1500)

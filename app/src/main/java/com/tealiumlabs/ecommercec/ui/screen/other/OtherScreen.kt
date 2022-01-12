@@ -22,6 +22,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +36,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.EcommViewModel
 import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.CustomTextField
@@ -88,7 +90,7 @@ private fun OtherTopContent() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Tealium Commerce",
+                text = stringResource(id = R.string.tealium_ecommerce),
                 Modifier.padding(20.dp, 8.dp, 0.dp, 0.dp),
                 style = EcommTypography.subtitle1.copy(
                     fontSize = 18.sp
@@ -128,7 +130,7 @@ private fun OtherScreenContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Tealium Account Configuration",
+            text = stringResource(id = R.string.tealium_account_configuration),
             style = EcommTypography.h5,
         )
         Divider(
@@ -150,7 +152,7 @@ private fun OtherScreenContent(
                 .clip(RoundedCornerShape(5.dp))
                 .align(alignment = Alignment.CenterHorizontally)
         ) {
-            Text(text = "Open Configuration Dialog")
+            Text(text = stringResource(id = R.string.open_configuration_dialog))
         }
 
         if (openTealConfigDialog.value) {
@@ -166,7 +168,7 @@ private fun OtherScreenContent(
         Spacer(modifier = Modifier.height(32.dp))
 
         Text(
-            text = "Video Tracking",
+            text = stringResource(id = R.string.video_tracking),
             style = EcommTypography.h5,
         )
         Divider(
@@ -210,7 +212,7 @@ private fun OtherScreenContent(
         Spacer(modifier = Modifier.height(32.dp))
 
         Text(
-            text = "Consent Management",
+            text = stringResource(id = R.string.consent_management),
             style = EcommTypography.h5,
         )
         Divider(
@@ -232,7 +234,7 @@ private fun OtherScreenContent(
                 .clip(RoundedCornerShape(5.dp))
                 .align(alignment = Alignment.CenterHorizontally)
         ) {
-            Text(text = "Consent Management Dialog")
+            Text(text = stringResource(id = R.string.consent_management_dialog))
         }
 
         if (openConsentMgrDialog.value) {
@@ -300,7 +302,7 @@ fun ConsentMgrDialog(
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = "Consent Management",
+                    text = stringResource(id = R.string.consent_management),
                     style = EcommTypography.h5,
                 )
 
@@ -318,7 +320,7 @@ fun ConsentMgrDialog(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Consent Status",
+                        text = stringResource(id = R.string.consent_status),
                         modifier = Modifier
                             .weight(8f)
                     )
@@ -466,7 +468,7 @@ fun ConsentMgrDialog(
                         },
                         modifier = Modifier.padding(4.dp)
                     ) {
-                        Text(text = "Save")
+                        Text(text = stringResource(id = R.string.save))
                     }
                 }
             }
@@ -547,7 +549,7 @@ private fun TealiumProfileConfigureDialog(
                         .fillMaxSize(),
                 ) {
                     Text(
-                        text = "Tealium Account Information",
+                        text = stringResource(id = R.string.tealium_account_information),
                         modifier = Modifier.fillMaxWidth(),
                         style = EcommTypography.subtitle1.copy(fontSize = 16.sp),
                         textAlign = TextAlign.Center,
@@ -556,7 +558,7 @@ private fun TealiumProfileConfigureDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     CustomTextField(
-                        textValue = "Account",
+                        textValue = stringResource(id = R.string.account),
                         bgColor = colorTextBodyLight,
                         stateValue = acct,
                         focusRequestN = focusRequesters[0],
@@ -568,7 +570,7 @@ private fun TealiumProfileConfigureDialog(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     CustomTextField(
-                        textValue = "Profile",
+                        textValue = stringResource(id = R.string.profile),
                         bgColor = colorTextBodyLight,
                         stateValue = prof,
                         focusRequestN = focusRequesters[1],
@@ -580,7 +582,7 @@ private fun TealiumProfileConfigureDialog(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     CustomTextField(
-                        textValue = "DataSource",
+                        textValue = stringResource(id = R.string.data_source),
                         bgColor = colorTextBodyLight,
                         stateValue = ds,
                         focusRequestN = focusRequesters[2],
@@ -592,7 +594,7 @@ private fun TealiumProfileConfigureDialog(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     CustomTextField(
-                        textValue = "Environment",
+                        textValue = stringResource(id = R.string.environment),
                         bgColor = colorTextBodyLight,
                         stateValue = env,
                         focusRequestN = focusRequesters[3],
@@ -620,7 +622,7 @@ private fun TealiumProfileConfigureDialog(
                                 .focusOrder(focusRequesters[4]) {
                                 }
                         ) {
-                            Text("Clear")
+                            Text(stringResource(id = R.string.clear))
                         }
 
                         Button(
@@ -641,7 +643,7 @@ private fun TealiumProfileConfigureDialog(
                                 .focusOrder(focusRequesters[5]) {
                                 }
                         ) {
-                            Text("Save")
+                            Text(stringResource(id = R.string.save))
                         }
 
                     }

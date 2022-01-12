@@ -1,7 +1,6 @@
 package com.tealiumlabs.ecommercec.tealium
 
 import android.app.Application
-import com.tealiumlabs.ecommercec.model.EcommViewModel
 
 object TealiumHelperList {
     private val tealiumInstances: MutableMap<String, TealiumHelperB> = mutableMapOf()

@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
@@ -22,6 +23,7 @@ import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.model.OutfitInCart
 import com.tealiumlabs.ecommercec.ui.components.FavoriteButton
@@ -174,7 +176,7 @@ private fun Body(
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = "Details",
+                            text = stringResource(id = R.string.details),
                             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
                             color = colorDesc,
                             modifier = HzPadding
@@ -211,9 +213,9 @@ private fun Body(
                         modifier = HzPadding
                     )
                     val textButton = if (seeMore) {
-                        "SEE MORE"
+                        stringResource(id = R.string.see_more)
                     } else {
-                        "SEE LESS"
+                        stringResource(id = R.string.see_less)
                     }
                     Text(
                         text = textButton,
@@ -412,7 +414,7 @@ private fun CartBottomBar(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "ADD TO CART",
+                        text = stringResource(id = R.string.add_to_cart),
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         maxLines = 1

@@ -21,6 +21,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,7 +58,7 @@ fun GlobalTopAppBar(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Tealium Commerce",
+                text = stringResource(id = R.string.tealium_ecommerce),
                 Modifier.padding(20.dp, 8.dp, 0.dp, 0.dp),
                 style = EcommTypography.subtitle1.copy(
                     fontSize = 18.sp
@@ -157,7 +158,7 @@ private fun LoginDialog(
                         .fillMaxSize(),
                 ) {
                     Text(
-                        text = "Sign In",
+                        text = stringResource(id = R.string.sign_in),
                         modifier = Modifier.fillMaxWidth(),
                         style = EcommTypography.subtitle1,
                         textAlign = TextAlign.Center,
@@ -166,7 +167,7 @@ private fun LoginDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     CustomTextField(
-                        textValue = "Email address",
+                        textValue = stringResource(id = R.string.email_address),
                         bgColor = colorTextBodyLight,
                         stateValue = emailVal,
                         focusRequestN = focusRequesters[0],
@@ -178,7 +179,7 @@ private fun LoginDialog(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     CustomTextField(
-                        textValue = "Password",
+                        textValue = stringResource(id = R.string.password),
                         bgColor = colorTextBodyLight,
                         stateValue = passwordVal,
                         passwordVisibility = passwordVisibility,
@@ -191,7 +192,7 @@ private fun LoginDialog(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     CustomTextField(
-                        textValue = "Trace ID",
+                        textValue = stringResource(id = R.string.trace_id),
                         bgColor = colorTextBodyLight,
                         stateValue = traceVal,
                         focusRequestN = focusRequesters[2],
@@ -212,7 +213,9 @@ private fun LoginDialog(
                             .focusOrder(focusRequesters[3]) {
                             }
                     ) {
-                        Text("Login")
+                        Text(
+                            text = stringResource(id = R.string.login) ,
+                        )
                     }
                 }
 

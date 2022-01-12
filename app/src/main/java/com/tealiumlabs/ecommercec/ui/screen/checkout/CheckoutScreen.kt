@@ -17,11 +17,13 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.CheckoutInfo
 import com.tealiumlabs.ecommercec.model.OutfitInCart
 import com.tealiumlabs.ecommercec.ui.components.CustomTextField
@@ -96,7 +98,7 @@ private fun CheckoutScreenBody(
             Spacer(Modifier.width(80.dp))
 
             Text(
-                text = "CHECKOUT",
+                text = stringResource(id = R.string.checkout),
                 style = EcommTypography.subtitle1,
                 modifier = Modifier.padding(top = 12.dp)
             )
@@ -120,7 +122,7 @@ private fun CheckoutScreenBody(
 
             item {
                 ExpandableCard(
-                    card = "BILLING INFORMATION",
+                    card = stringResource(id = R.string.billing_information),
                     onCardArrowClick = {
                         billingInfo.value = !billingInfo.value
                         billingInfoComplete.value = false
@@ -139,7 +141,7 @@ private fun CheckoutScreenBody(
 
             item {
                 ExpandableCard(
-                    card = "SHIPPING INFORMATION",
+                    card = stringResource(id = R.string.shipping_information),
                     onCardArrowClick = {
                         shippingInfo.value = !shippingInfo.value
                         shippingInfoComplete.value = false
@@ -158,7 +160,7 @@ private fun CheckoutScreenBody(
 
             item {
                 ExpandableCard(
-                    card = "SHIPPING METHOD",
+                    card = stringResource(id = R.string.shipping_method),
                     onCardArrowClick = {
                         shippingMethod.value = !shippingMethod.value
                         shippingMethodComplete.value = false
@@ -178,7 +180,7 @@ private fun CheckoutScreenBody(
 
             item {
                 ExpandableCard(
-                    card = "PAYMENT INFORMATION",
+                    card = stringResource(id = R.string.payment_information),
                     onCardArrowClick = {
                         paymentInfo.value = !paymentInfo.value
                         paymentInfoComplete.value = false
@@ -196,7 +198,7 @@ private fun CheckoutScreenBody(
 
             item {
                 ExpandableCard(
-                    card = "ORDER REVIEW",
+                    card = stringResource(id = R.string.order_review),
                     onCardArrowClick = {
                         orderReview.value = !orderReview.value
                         orderReviewComplete.value = false
@@ -268,12 +270,6 @@ private fun ExpandableCard(
 
     Card(
         backgroundColor = cardBgColor,
-//        contentColor = Color(
-//            ContextCompat.getColor(
-//                LocalContext.current,
-//                R.color.colorTextBodyLight
-//            )
-//        ),
         contentColor = Shadow10,
         elevation = cardElevation,
         shape = RoundedCornerShape(cardRoundedCorners),
@@ -389,13 +385,13 @@ private fun ContentsBillingInfo(
 
     Column(modifier = Modifier.padding(8.dp)) {
         Text(
-            text = "Name",
+            text = stringResource(id = R.string.name),
             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
             color = colorDesc,
         )
 
         CustomTextField(
-            textValue = "Name",
+            textValue = stringResource(id = R.string.name),
             bgColor = Rose1,
             stateValue = checkoutInfo.billName,
             focusRequestN = focusRequesters[0],
@@ -407,13 +403,13 @@ private fun ContentsBillingInfo(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Address",
+            text = stringResource(id = R.string.address),
             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
             color = colorDesc,
         )
 
         CustomTextField(
-            textValue = "Address",
+            textValue = stringResource(id = R.string.address),
             bgColor = Rose1,
             stateValue = checkoutInfo.billAddress,
             focusRequestN = focusRequesters[1],
@@ -425,13 +421,13 @@ private fun ContentsBillingInfo(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Zip/Postal Code",
+            text = stringResource(id = R.string.zip_code),
             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
             color = colorDesc,
         )
 
         CustomTextField(
-            textValue = "Zip/Postal Code",
+            textValue = stringResource(id = R.string.zip_code),
             bgColor = Rose1,
             stateValue = checkoutInfo.billZip,
             focusRequestN = focusRequesters[2],
@@ -443,13 +439,13 @@ private fun ContentsBillingInfo(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Email address",
+            text = stringResource(id = R.string.email_address),
             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
             color = colorDesc,
         )
 
         CustomTextField(
-            textValue = "Email address",
+            textValue = stringResource(id = R.string.email_address),
             bgColor = Rose1,
             stateValue = checkoutInfo.email,
             focusRequestN = focusRequesters[3],
@@ -461,13 +457,13 @@ private fun ContentsBillingInfo(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Telephone",
+            text = stringResource(id = R.string.phone),
             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
             color = colorDesc,
         )
 
         CustomTextField(
-            textValue = "Telephone",
+            textValue = stringResource(id = R.string.phone),
             bgColor = Rose1,
             stateValue = checkoutInfo.billPhone,
             focusRequestN = focusRequesters[4],
@@ -489,7 +485,9 @@ private fun ContentsBillingInfo(
                 .focusOrder(focusRequesters[5]) {
                 }
         ) {
-            Text("CONTINUE")
+            Text(
+                text = stringResource(id = R.string.next)
+            )
         }
 
 
@@ -507,13 +505,13 @@ private fun ContentsShippingInfo(
 
     Column(modifier = Modifier.padding(8.dp)) {
         Text(
-            text = "Name",
+            text = stringResource(id = R.string.name),
             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
             color = colorDesc,
         )
 
         CustomTextField(
-            textValue = "Name",
+            textValue = stringResource(id = R.string.name),
             bgColor = Rose1,
             stateValue = checkoutInfo.shipName,
             focusRequestN = focusRequesters[0],
@@ -525,13 +523,13 @@ private fun ContentsShippingInfo(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Address",
+            text = stringResource(id = R.string.address),
             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
             color = colorDesc,
         )
 
         CustomTextField(
-            textValue = "Address",
+            textValue = stringResource(id = R.string.address),
             bgColor = Rose1,
             stateValue = checkoutInfo.shipAddress,
             focusRequestN = focusRequesters[1],
@@ -543,13 +541,13 @@ private fun ContentsShippingInfo(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Zip/Postal Code",
+            text = stringResource(id = R.string.zip_code),
             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
             color = colorDesc,
         )
 
         CustomTextField(
-            textValue = "Zip/Postal Code",
+            textValue = stringResource(id = R.string.zip_code),
             bgColor = Rose1,
             stateValue = checkoutInfo.shipZip,
             focusRequestN = focusRequesters[2],
@@ -561,13 +559,13 @@ private fun ContentsShippingInfo(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Telephone",
+            text = stringResource(id = R.string.phone),
             style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
             color = colorDesc,
         )
 
         CustomTextField(
-            textValue = "Telephone",
+            textValue = stringResource(id = R.string.phone),
             bgColor = Rose1,
             stateValue = checkoutInfo.shipPhone,
             focusRequestN = focusRequesters[3],
@@ -589,7 +587,7 @@ private fun ContentsShippingInfo(
                 .focusOrder(focusRequesters[4]) {
                 }
         ) {
-            Text("CONTINUE")
+            Text(text = stringResource(id = R.string.next))
         }
 
 
@@ -618,7 +616,7 @@ private fun ContentsShippingMethod(
                 }
             )
             Text(
-                text = "Flat Rate",
+                text = stringResource(id = R.string.flat_rate),
                 style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
                 color = colorDesc,
             )
@@ -633,7 +631,7 @@ private fun ContentsShippingMethod(
             )
 
             Text(
-                text = "Free Shipping",
+                text = stringResource(id = R.string.free_shipping),
                 style = MaterialTheme.typography.h5.copy(fontSize = 12.sp),
                 color = colorDesc,
             )
@@ -653,7 +651,7 @@ private fun ContentsShippingMethod(
             modifier = Modifier
                 .size(160.dp, 40.dp)
         ) {
-            Text("CONTINUE")
+            Text(stringResource(id = R.string.next))
         }
     }
 }
@@ -668,7 +666,7 @@ private fun ContentsPaymentInfo(
         modifier = Modifier.padding(8.dp)
     ) {
         Text(
-            text = "Cash On Delivery",
+            text = stringResource(id = R.string.cash_on_delivery),
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.h5.copy(textAlign = TextAlign.Center),
             color = colorDesc,
@@ -685,7 +683,7 @@ private fun ContentsPaymentInfo(
             modifier = Modifier
                 .size(160.dp, 40.dp)
         ) {
-            Text("CONTINUE")
+            Text(stringResource(id = R.string.next))
         }
     }
 }
@@ -704,7 +702,7 @@ private fun ContentsOrderReview(
                 modifier = Modifier.weight(.5f)
             ) {
                 Text(
-                    text = "BILLING ADDRESS",
+                    text = stringResource(id = R.string.billing_address),
                     style = MaterialTheme.typography.h5.copy(fontSize = 14.sp, color = colorDesc),
                 )
                 Text(
@@ -731,7 +729,7 @@ private fun ContentsOrderReview(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "SHIPPING METHOD",
+                    text = stringResource(id = R.string.shipping_method),
                     style = MaterialTheme.typography.h5.copy(fontSize = 14.sp, color = colorDesc),
                 )
                 Text(
@@ -744,7 +742,7 @@ private fun ContentsOrderReview(
                 modifier = Modifier.weight(.5f)
             ) {
                 Text(
-                    text = "SHIPPING ADDRESS",
+                    text = stringResource(id = R.string.shipping_address),
                     style = MaterialTheme.typography.h5.copy(fontSize = 14.sp, color = colorDesc),
                 )
                 Text(
@@ -771,11 +769,11 @@ private fun ContentsOrderReview(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "PAYMENT METHOD",
+                    text = stringResource(id = R.string.payment_method),
                     style = MaterialTheme.typography.h5.copy(fontSize = 14.sp, color = colorDesc),
                 )
                 Text(
-                    text = "Cash On Delivery",
+                    text = stringResource(id = R.string.cash_on_delivery),
                     style = MaterialTheme.typography.h5.copy(fontSize = 9.sp, color = colorDesc),
                 )
             }
@@ -790,22 +788,22 @@ private fun ContentsOrderReview(
                     .background(Color.LightGray)
             ) {
                 Text(
-                    text = "PRODUCT",
+                    text = stringResource(id = R.string.product),
                     style = MaterialTheme.typography.h5.copy(fontSize = 11.sp, color = colorDesc),
                     modifier = Modifier.weight(.5f)
                 )
                 Text(
-                    text = "PRICE",
+                    text = stringResource(id = R.string.price),
                     style = MaterialTheme.typography.h5.copy(fontSize = 11.sp, color = colorDesc),
                     modifier = Modifier.weight(.2f)
                 )
                 Text(
-                    text = "QTY",
+                    text = stringResource(id = R.string.qty1),
                     style = MaterialTheme.typography.h5.copy(fontSize = 11.sp, color = colorDesc, textAlign = TextAlign.Center),
                     modifier = Modifier.weight(.1f)
                 )
                 Text(
-                    text = "SUBTOTAL",
+                    text = stringResource(id = R.string.subtotal),
                     style = MaterialTheme.typography.h5.copy(fontSize = 11.sp, color = colorDesc),
                     modifier = Modifier.weight(.2f)
                 )
@@ -826,13 +824,13 @@ private fun ContentsOrderReview(
                         )
 
                         Text(
-                            text = "Color: White",
+                            text = stringResource(id = R.string.dummy_text1),
                             style = MaterialTheme.typography.h5.copy(fontSize = 11.sp, color = colorDesc),
                             modifier = Modifier.padding(start = 8.dp)
                         )
 
                         Text(
-                            text = "Size: XL",
+                            text = stringResource(id = R.string.dummy_text3),
                             style = MaterialTheme.typography.h5.copy(fontSize = 11.sp, color = colorDesc),
                             modifier = Modifier.padding(start = 8.dp)
                         )
@@ -891,7 +889,7 @@ private fun ContentsOrderReview(
             modifier = Modifier
                 .size(160.dp, 40.dp)
         ) {
-            Text("PURCHASE")
+            Text(stringResource(id = R.string.purchase))
         }
     }
 }

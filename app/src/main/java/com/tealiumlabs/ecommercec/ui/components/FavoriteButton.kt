@@ -17,8 +17,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.ui.theme.*
 
 @OptIn(ExperimentalUnitApi::class)
@@ -34,10 +36,13 @@ fun FavoriteButton(
         mutableStateOf(isFavorite)
     }
 
-    var transition = updateTransition(targetState = favState, label = "Favorite Transition")
+    var transition = updateTransition(
+        targetState = favState,
+        label = "Favorite Transition"
+    )
 
     val buttonWidth by transition.animateDp(label = "Favorite Button width") { state ->
-        when (state){
+        when (state) {
             true -> 32.dp
             else -> width
         }
@@ -50,11 +55,11 @@ fun FavoriteButton(
                 .width(buttonWidth)
                 .border(0.5.dp, colorDesc, RoundedCornerShape(5.dp))
                 .clickable {
-                           favState = onclick(favState)
+                    favState = onclick(favState)
                 },
             contentAlignment = Alignment.Center,
-        ){
-            if(favState){
+        ) {
+            if (favState) {
                 Surface {
                     Icon(
                         imageVector = Icons.Outlined.Favorite,
@@ -63,8 +68,7 @@ fun FavoriteButton(
                         tint = Color.LightGray
                     )
                 }
-            }
-            else{
+            } else {
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically
@@ -79,8 +83,13 @@ fun FavoriteButton(
                     )
 
                     Text(
-                        text = "ADD TO FAVORITE",
-                        style = MaterialTheme.typography.h5.copy(fontSize = TextUnit(textSize, TextUnitType.Sp)),
+                        text = stringResource(id = R.string.add_to_favorite),
+                        style = MaterialTheme.typography.h5.copy(
+                            fontSize = TextUnit(
+                                textSize,
+                                TextUnitType.Sp
+                            )
+                        ),
                         color = colorDesc,
                     )
                 }
@@ -93,12 +102,12 @@ fun FavoriteButton(
 @Preview
 @Composable
 private fun FavoriteButtonPreview() {
-   FavoriteButton(
-       height = 24.dp,
-       width = 160.dp,
-       textSize = 16f,
-   ){
-       !it
-   }
+    FavoriteButton(
+        height = 24.dp,
+        width = 160.dp,
+        textSize = 16f,
+    ) {
+        !it
+    }
 }
 

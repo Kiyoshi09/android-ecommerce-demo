@@ -1,3 +1,77 @@
 <resources>
     <string name="app_name">ECommerceC</string>
+    <string name="tealium_ecommerce">Tealium Commerce</string>
+
+    <string name="new_products">NEW PRODUCTS</string>
+    <string name="add_to_favorite">ADD TO FAVORITE</string>
+    <string name="my_favorite">My Favorite</string>
+    <string name="learn_more">Learn More</string>
+
+    <string name="no_result">No Results</string>
+    <string name="search_name_description">Search a Name or Description</string>
+    <string name="keyword_history">Keyword History</string>
+
+    <string name="sign_in">Sign In</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="trace_id">Trace ID</string>
+    <string name="login">LogIn</string>
+    <string name="name">Name</string>
+    <string name="address">Address</string>
+    <string name="zip_code">Zip/Postal Code</string>
+    <string name="phone">Telephone</string>
+
+    <string name="qty1">Qty</string>
+    <string name="qty2">Qty :</string>
+    <string name="total">Total :</string>
+    <string name="proceed_to_checkout">PROCEED TO CHECKOUT</string>
+    <string name="product">PRODUCT</string>
+    <string name="price">PRICE</string>
+    <string name="subtotal">SUBTOTAL</string>
+    <string name="purchase">PURCHASE</string>
+    <string name="add_to_cart">ADD TO CART</string>
+
+    <string name="details">Details</string>
+    <string name="see_more">SEE MORE</string>
+    <string name="see_less">SEE LESS</string>
+
+    <string name="dummy_text1">Color : White</string>
+    <string name="dummy_text2">             </string>
+    <string name="dummy_text3">Size : XL</string>
+    <string name="dummy_text4">          </string>
+
+    <string name="checkout">CHECKOUT</string>
+    <string name="billing_information">BILLING INFORMATION</string>
+    <string name="shipping_information">SHIPPING INFORMATION</string>
+    <string name="shipping_method">SHIPPING METHOD</string>
+    <string name="payment_information">PAYMENT INFORMATION</string>
+    <string name="payment_method">PAYMENT METHOD</string>
+    <string name="order_review">ORDER REVIEW</string>
+    <string name="next">CONTINUE</string>
+    <string name="billing_address">BILLING ADDRESS</string>
+    <string name="shipping_address">SHIPPING ADDRESS</string>
+
+    <string name="flat_rate">Flat Rate</string>
+    <string name="free_shipping">Free Shipping</string>
+    <string name="cash_on_delivery">Cash On Delivery</string>
+
+    <string name="order_received">YOUR ORDER HAS BEEN RECEIVED</string>
+    <string name="thank_you">THANK YOU FOR YOUR PURCHASE!</string>
+
+    <string name="tealium_account_configuration">Tealium Account Configuration</string>
+    <string name="tealium_account_information">Tealium Account Information</string>
+    <string name="open_configuration_dialog">Open Configuration Dialog</string>
+    <string name="video_tracking">Video Tracking</string>
+    <string name="consent_management">Consent Management</string>
+    <string name="consent_management_dialog">Consent Management Dialog</string>
+    <string name="consent_status">Consent Status</string>
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+
+    <string name="account">Account</string>
+    <string name="profile">Profile</string>
+    <string name="data_source">Data Source</string>
+    <string name="environment">Environment</string>
+
+
 </resources>

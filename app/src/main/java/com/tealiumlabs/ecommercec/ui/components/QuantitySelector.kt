@@ -1,10 +1,8 @@
 package com.tealiumlabs.ecommercec.ui.components
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,11 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.ui.theme.*
 
 @Composable
@@ -31,7 +30,7 @@ fun QuantitySelector(
     Row(modifier = modifier) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             Text(
-                text = "Qty",
+                text = stringResource(id = R.string.qty1),
                 style = MaterialTheme.typography.subtitle1,
                 color = colorTextBodyLight,
                 modifier = Modifier
@@ -86,7 +85,7 @@ fun QuantitySelectorSmall(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "Qty :",
+            text = stringResource(id = R.string.qty2),
             style = EcommTypography.h5.copy(
                 fontSize = 12.sp,
             ),

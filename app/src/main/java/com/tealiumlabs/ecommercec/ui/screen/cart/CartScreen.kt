@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -99,7 +100,7 @@ private fun CartScreenBody(
                             .weight(3f)
                     ) {
                         Text(
-                            text = "Total :",
+                            text = stringResource(id = R.string.total),
                             style = EcommTypography.h5.copy(
                                 textAlign = TextAlign.End,
                                 fontWeight = FontWeight.SemiBold,
@@ -141,7 +142,9 @@ private fun CartScreenBody(
                         .padding(4.dp)
                         .clip(RoundedCornerShape(5.dp))
                 ) {
-                    Text(text = "PROCEED TO CHECKOUT")
+                    Text(
+                        text = stringResource(id = R.string.proceed_to_checkout)
+                    )
                 }
             }
         }
@@ -228,8 +231,13 @@ private fun CartScreenBody(
                                 ) {
                                     Spacer(modifier = Modifier.width(32.dp))
                                     Text(
-                                        text = if (outfitInCart.outfit.category == OutfitCategory.Women
-                                            || outfitInCart.outfit.category == OutfitCategory.Men) "Color : White" else "             ",
+                                        text =
+                                            if (
+                                                outfitInCart.outfit.category == OutfitCategory.Women
+                                                || outfitInCart.outfit.category == OutfitCategory.Men
+                                            ) stringResource(id = R.string.dummy_text1)
+                                            else
+                                                stringResource(id = R.string.dummy_text2),
                                         style = EcommTypography.h5.copy(
                                             fontSize = 12.sp,
                                         ),
@@ -263,8 +271,13 @@ private fun CartScreenBody(
                                         modifier = Modifier.weight(4f)
                                     ) {
                                         Text(
-                                            text = if (outfitInCart.outfit.category == OutfitCategory.Women
-                                                || outfitInCart.outfit.category == OutfitCategory.Men) "Size : XL" else "          ",
+                                            text =
+                                            if (outfitInCart.outfit.category == OutfitCategory.Women
+                                                || outfitInCart.outfit.category == OutfitCategory.Men
+                                            )
+                                                stringResource(id = R.string.dummy_text3)
+                                            else
+                                                stringResource(id = R.string.dummy_text4),
                                             style = EcommTypography.h5.copy(
                                                 fontSize = 12.sp
                                             ),
