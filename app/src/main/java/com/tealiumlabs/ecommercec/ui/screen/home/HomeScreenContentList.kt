@@ -1,5 +1,6 @@
 package com.tealiumlabs.ecommercec.ui.screen.home
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,16 +32,58 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.Outfit
+import com.tealiumlabs.ecommercec.model.OutfitCategory
+import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
 import com.tealiumlabs.ecommercec.ui.theme.EcommTypography
 import com.tealiumlabs.ecommercec.ui.theme.*
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreenContentList(
     navController: NavController,
     outfitList: List<Outfit>,
-    outfitFavoriteList: MutableList<Outfit>
+    outfitFavoriteList: MutableList<Outfit>,
+    screenName: String,
+    searchKeyword: String? = null,
 ) {
+    /////////// TEALIUM TRACKING /////////////
+    if (searchKeyword == null) {
+        LaunchedEffect(key1 = screenName) {
+            TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+
+                Log.d("KIYOSHI-TEALIUM-TRACKING", "$screenName")
+
+                tealiumHelper.trackView(
+                    instanceName = TealiumHelperList.currentInstanceName!!,
+                    name = "screen_view",
+                    data = mutableMapOf(
+                        "screen_name" to screenName,
+                        "screen_type" to "home",
+                    )
+                )
+            }
+        }
+
+    } else {
+        LaunchedEffect(key1 = searchKeyword) {
+            TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+
+                Log.d("KIYOSHI-TEALIUM-TRACKING", "$screenName")
+
+                tealiumHelper.trackView(
+                    instanceName = TealiumHelperList.currentInstanceName!!,
+                    name = "screen_view",
+                    data = mutableMapOf(
+                        "screen_name" to screenName,
+                        "screen_type" to "search",
+                        "search_keyword" to searchKeyword,
+                    )
+                )
+            }
+        }
+    }
+    //////////////////////////////////////////
 
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
@@ -166,16 +210,15 @@ fun HomeScreenContentList(
                                         .weight(1f),
                                     Alignment.BottomEnd
                                 ) {
-                                    val isFavorite = mutableStateOf(outfitFavoriteList.contains(outfit))
+                                    val isFavorite =
+                                        mutableStateOf(outfitFavoriteList.contains(outfit))
 
                                     IconButton(
                                         onClick = {
-                                            if(outfitFavoriteList.contains(outfit)){
+                                            if (outfitFavoriteList.contains(outfit)) {
                                                 outfitFavoriteList.remove(outfit)
                                                 isFavorite.value = false
-                                            }
-                                            else
-                                            {
+                                            } else {
                                                 outfitFavoriteList.add(outfit)
                                                 isFavorite.value = true
                                             }
@@ -183,12 +226,11 @@ fun HomeScreenContentList(
                                     ) {
                                         Icon(
                                             imageVector =
-                                                    if(isFavorite.value) {
-                                                        Icons.Outlined.Favorite
-                                                    }
-                                                    else {
-                                                        Icons.Outlined.FavoriteBorder
-                                                    },
+                                            if (isFavorite.value) {
+                                                Icons.Outlined.Favorite
+                                            } else {
+                                                Icons.Outlined.FavoriteBorder
+                                            },
                                             contentDescription = null,
                                             modifier = Modifier.size(16.dp),
                                             tint = Color.LightGray

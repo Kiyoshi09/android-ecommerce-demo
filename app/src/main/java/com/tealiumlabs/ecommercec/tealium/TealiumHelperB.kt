@@ -13,6 +13,7 @@ import com.tealium.dispatcher.Dispatch
 import com.tealium.dispatcher.TealiumEvent
 import com.tealium.dispatcher.TealiumView
 import com.tealium.lifecycle.Lifecycle
+import com.tealium.lifecycle.isAutoTrackingEnabled
 import com.tealium.media.Media
 import com.tealium.media.mediaBackgroundSessionEnabled
 import com.tealium.media.mediaBackgroundSessionEndInterval
@@ -35,8 +36,6 @@ class TealiumHelperB(
     val dataSourceId: String,
 ) {
     fun init() {
-        Log.d("KIYOSHI-TEALIUM", "$accountName,$profileName,$envName,$dataSourceId")
-
         val config = TealiumConfig(
             application,
             accountName = accountName,
@@ -62,6 +61,8 @@ class TealiumHelperB(
             //hostedDataLayerEventMappings = mapOf("pdp" to "product_id")
             // Uncomment one of the following lines to set the appropriate Consent Policy
             // and enable the consent manager
+
+            // Commented out for test
             consentManagerPolicy = ConsentPolicy.GDPR
             // consentManagerPolicy = ConsentPolicy.CCPA
             consentExpiry = ConsentExpiry(1, TimeUnit.DAYS)
@@ -73,6 +74,8 @@ class TealiumHelperB(
             mediaBackgroundSessionEnabled = false
             mediaBackgroundSessionEndInterval = 5000L  // end session after 5 seconds
 
+            isAutoTrackingEnabled = true
+
             //autoTrackingMode = if (BuildConfig.AUTO_TRACKING) AutoTrackingMode.FULL else AutoTrackingMode.NONE
             // autoTrackingBlocklistFilename = "autotracking-blocklist.json"
             // autoTrackingBlocklistUrl = "https://tags.tiqcdn.com/dle/tealiummobile/android/autotracking-blocklist.json"
@@ -80,11 +83,16 @@ class TealiumHelperB(
         }
 
         Tealium.create(name, config) {
+
+            this.consentManager.isConsentLoggingEnabled = true
+
             events.subscribe(object : UserConsentPreferencesUpdatedListener {
                 override fun onUserConsentPreferencesUpdated(
                     userConsentPreferences: UserConsentPreferences,
                     policy: ConsentManagementPolicy
                 ) {
+                    Log.d("KIYOSHI-CONSENT", "call onUserConsentPreferencesUpdated ${userConsentPreferences.consentStatus}")
+
                     if (userConsentPreferences.consentStatus == ConsentStatus.UNKNOWN) {
                         Logger.dev(BuildConfig.TAG, "Re-prompt for consent")
                     }
@@ -117,23 +125,35 @@ class TealiumHelperB(
         }
     }
 
-    fun fetchConsentCategories(): String? {
-        return Tealium[BuildConfig.TEALIUM_INSTANCE]?.consentManager?.userConsentCategories?.joinToString(",")
+    fun fetchConsentCategories(instanceName:String): String? {
+        return Tealium[instanceName]?.consentManager?.userConsentCategories?.joinToString(",")
     }
 
-    fun setConsentCategories(categories: Set<String>) {
-        Tealium[BuildConfig.TEALIUM_INSTANCE]?.consentManager?.userConsentCategories =
-            ConsentCategory.consentCategories(categories)
+    fun setConsentStatus(instanceName:String, status: ConsentStatus) {
+        Tealium[instanceName]?.consentManager?.userConsentStatus = status
     }
 
-    fun trackView(name: String, data: Map<String, Any>?) {
+    fun getConsentStatus(instanceName: String): Boolean {
+        return Tealium[instanceName]?.consentManager?.userConsentStatus == ConsentStatus.CONSENTED
+    }
+
+    fun setConsentCategories(instanceName:String, categories: Set<ConsentCategory>) {
+        Tealium[instanceName]?.consentManager?.userConsentCategories = categories
+    }
+
+//    fun setConsentCategories(instanceName:String, categories: Set<String>) {
+//        Tealium[instanceName]?.consentManager?.userConsentCategories =
+//            ConsentCategory.consentCategories(categories)
+//    }
+
+    fun trackView(instanceName:String, name: String, data: Map<String, Any>?) {
         val viewDispatch = TealiumView(name, data)
-        Tealium[BuildConfig.TEALIUM_INSTANCE]?.track(viewDispatch)
+        Tealium[instanceName]?.track(viewDispatch)
     }
 
-    fun trackEvent(name: String, data: Map<String, Any>?) {
+    fun trackEvent(instanceName:String, name: String, data: Map<String, Any>?) {
         val eventDispatch = TealiumEvent(name, data)
-        Tealium[BuildConfig.TEALIUM_INSTANCE]?.track(eventDispatch)
+        Tealium[instanceName]?.track(eventDispatch)
     }
 
     val customValidator: DispatchValidator by lazy {

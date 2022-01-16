@@ -6,6 +6,7 @@ object TealiumHelperList {
     private val tealiumInstances: MutableMap<String, TealiumHelperB> = mutableMapOf()
 
     var currentTealiumHelper: TealiumHelperB? = null
+    var currentInstanceName: String? = null
 
     fun update(
         application: Application,
@@ -18,6 +19,8 @@ object TealiumHelperList {
         } else {
             if( name.split(";").size == 4 ) {
 
+                currentInstanceName = name
+
                 val acct = name.split(";")[0]
                 val prof = name.split(";")[1]
                 val ds = name.split(";")[2]
@@ -29,8 +32,8 @@ object TealiumHelperList {
                         name = name,
                         accountName = acct,
                         profileName = prof,
-                        envName = ds,
-                        dataSourceId = env,
+                        envName = env,
+                        dataSourceId = ds,
                     )
 
                     _tealiumHelper.init()

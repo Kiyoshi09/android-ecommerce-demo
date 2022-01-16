@@ -36,6 +36,8 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.tealium.core.consent.ConsentCategory
+import com.tealium.core.consent.ConsentStatus
 import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.EcommViewModel
 import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
@@ -49,6 +51,24 @@ fun OtherScreen(
     viewModel: EcommViewModel,
     navController: NavController,
 ) {
+    /////////// TEALIUM TRACKING /////////////
+    LaunchedEffect(key1 = TealiumHelperList.currentInstanceName){
+        TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+
+            Log.d("KIYOSHI-TEALIUM-TRACKING", "other")
+
+            tealiumHelper.trackView(
+                instanceName = TealiumHelperList.currentInstanceName!!,
+                name = "screen_view",
+                data = mutableMapOf(
+                    "screen_name" to "other",
+                    "screen_type" to "other",
+                )
+            )
+        }
+    }
+    //////////////////////////////////////////
+
     val tealiumConfigState by viewModel.tealiumConfigState.collectAsState()
     Log.d("KIYOSHI-TEALIUM_CONFIG", "config - OtherScreen : ${tealiumConfigState.toString()}")
 
@@ -464,6 +484,47 @@ fun ConsentMgrDialog(
                             viewModel.consentMonitoring.value = cMonitoring.value
                             viewModel.consentCRM.value = cCrm.value
 
+                            TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+                                if (optInOut.value) {
+                                    tealiumHelper.setConsentStatus(
+                                        instanceName = TealiumHelperList.currentInstanceName!!,
+                                        status = ConsentStatus.CONSENTED,
+                                    )
+
+                                    val consentedCategories = mutableSetOf<ConsentCategory>()
+                                    if(cAnalytics.value) consentedCategories.add(ConsentCategory.ANALYTICS)
+                                    if(cAffiliate.value) consentedCategories.add(ConsentCategory.AFFILIATES)
+                                    if(cDisplayAd.value) consentedCategories.add(ConsentCategory.DISPLAY_ADS)
+                                    if(cSearch.value) consentedCategories.add(ConsentCategory.SEARCH)
+                                    if(cEmail.value) consentedCategories.add(ConsentCategory.EMAIL)
+                                    if(cPersonalization.value) consentedCategories.add(ConsentCategory.PERSONALIZATION)
+                                    if(cSocial.value) consentedCategories.add(ConsentCategory.SOCIAL)
+                                    if(cBigData.value) consentedCategories.add(ConsentCategory.BIG_DATA)
+                                    if(cMisc.value) consentedCategories.add(ConsentCategory.MISC)
+                                    if(cCdp.value) consentedCategories.add(ConsentCategory.CDP)
+                                    if(cMobile.value) consentedCategories.add(ConsentCategory.MOBILE)
+                                    if(cEngagement.value) consentedCategories.add(ConsentCategory.ENGAGEMENT)
+                                    if(cMonitoring.value) consentedCategories.add(ConsentCategory.MONITORING)
+                                    if(cCrm.value) consentedCategories.add(ConsentCategory.CRM)
+
+                                    tealiumHelper.setConsentCategories(
+                                        instanceName = TealiumHelperList.currentInstanceName!!,
+                                        categories = consentedCategories,
+                                    )
+
+                                } else {
+                                    tealiumHelper.setConsentStatus(
+                                        instanceName = TealiumHelperList.currentInstanceName!!,
+                                        status = ConsentStatus.NOT_CONSENTED,
+                                    )
+
+                                    tealiumHelper.setConsentCategories(
+                                        instanceName = TealiumHelperList.currentInstanceName!!,
+                                        categories = setOf(),
+                                    )
+                                }
+                            }
+
                             openDialog.value = false
                         },
                         modifier = Modifier.padding(4.dp)
@@ -509,7 +570,7 @@ private fun ConsentPreferenceCategory(
 @Composable
 private fun TealiumProfileConfigureDialog(
     openDialog: MutableState<Boolean>,
-    onSaveClicked : (String) -> Unit,
+    onSaveClicked: (String) -> Unit,
     tealiumConfigState: RequestState<String>,
 ) {
     val acct = remember { mutableStateOf("") }
@@ -517,11 +578,12 @@ private fun TealiumProfileConfigureDialog(
     val ds = remember { mutableStateOf("") }
     val env = remember { mutableStateOf("") }
 
-    if(tealiumConfigState is RequestState.Success) {
+    if (tealiumConfigState is RequestState.Success) {
         val s = tealiumConfigState.data
 
-        if(s.contains(";")
-            && s.split(";").size == 4){
+        if (s.contains(";")
+            && s.split(";").size == 4
+        ) {
 
             acct.value = s.split(";")[0]
             prof.value = s.split(";")[1]
@@ -627,7 +689,8 @@ private fun TealiumProfileConfigureDialog(
 
                         Button(
                             onClick = {
-                                val tealConfigStr = "${acct.value};${prof.value};${ds.value};${env.value}"
+                                val tealConfigStr =
+                                    "${acct.value};${prof.value};${ds.value};${env.value}"
 
                                 onSaveClicked(tealConfigStr)
                                 TealiumHelperList.update(

@@ -1,5 +1,6 @@
 package com.tealiumlabs.ecommercec.ui.screen.product
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -29,6 +30,7 @@ import com.tealiumlabs.ecommercec.model.OutfitInCart
 import com.tealiumlabs.ecommercec.ui.components.FavoriteButton
 import com.tealiumlabs.ecommercec.ui.components.QuantitySelector
 import com.tealiumlabs.ecommercec.model.EcommViewModel
+import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
 import com.tealiumlabs.ecommercec.ui.components.OutfitImage
 import com.tealiumlabs.ecommercec.ui.theme.*
@@ -53,6 +55,26 @@ fun ProductScreen(
     outfitId: Long?,
 ) {
     val outfit = viewModel.getOutfit(outfitId)!!
+
+    /////////// TEALIUM TRACKING /////////////
+    LaunchedEffect(key1 = TealiumHelperList.currentInstanceName){
+        TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+
+            Log.d("KIYOSHI-TEALIUM-TRACKING", "product")
+
+            tealiumHelper.trackView(
+                instanceName = TealiumHelperList.currentInstanceName!!,
+                name = "screen_view",
+                data = mutableMapOf(
+                    "screen_name" to "product",
+                    "screen_type" to "product",
+                    "product_id" to listOf(outfitId),
+                    "product_price" to listOf(outfit.price),
+                )
+            )
+        }
+    }
+    //////////////////////////////////////////
 
     Scaffold(
         topBar = {

@@ -1,6 +1,7 @@
 package com.tealiumlabs.ecommercec.ui.screen.home
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -25,6 +26,7 @@ import com.tealiumlabs.ecommercec.ui.screen.search.SearchDisplay
 import com.tealiumlabs.ecommercec.ui.screen.search.SearchState
 import com.tealiumlabs.ecommercec.ui.screen.search.rememberSearchState
 import com.tealiumlabs.ecommercec.ui.theme.*
+import com.tealiumlabs.ecommercec.utils.Constants.SEARCH_DELAY
 import com.tealiumlabs.ecommercec.utils.RequestState
 import kotlinx.coroutines.delay
 
@@ -35,15 +37,30 @@ fun HomeScreen(
     navController: NavController,
     state: SearchState<Outfit> = rememberSearchState()
 ) {
-    val selectedTabIndex: Int = viewModel.selectedTabIndex.value
-
+    //////////////// Tealium Tracking ///////////////
     LaunchedEffect(key1 = true) {
         viewModel.readTealiumConfigState()
     }
 
     val tealiumConfigState by viewModel.tealiumConfigState.collectAsState()
+    updateTealiumHelper(tealiumConfigState = tealiumConfigState)
 
-    UpdateTealiumHelper(tealiumConfigState = tealiumConfigState)
+    LaunchedEffect(key1 = tealiumConfigState) {
+
+        TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+            val cats = tealiumHelper.fetchConsentCategories(instanceName = TealiumHelperList.currentInstanceName!!) ?: ""
+
+            Log.d("KIYOSHI-TEALIUM","HomeScreen - ${cats}")
+
+            viewModel.updateConsentParameters(
+                consent = tealiumHelper.getConsentStatus(instanceName = TealiumHelperList.currentInstanceName!!),
+                categories = cats.split(",")
+            )
+        }
+    }
+    ////////////////////////////////////////////////
+
+    val selectedTabIndex: Int = viewModel.selectedTabIndex.value
 
     Scaffold(
         topBar = {
@@ -118,6 +135,7 @@ private fun HomeScreenBody(
                             navController = navController,
                             outfitList = viewModel.outfitWomenList,
                             outfitFavoriteList = viewModel.favoriteOutfitList,
+                            screenName = "women",
                         )
                     }
 
@@ -126,6 +144,7 @@ private fun HomeScreenBody(
                             navController = navController,
                             outfitList = viewModel.outfitMenList,
                             outfitFavoriteList = viewModel.favoriteOutfitList,
+                            screenName = "men",
                         )
                     }
 
@@ -134,6 +153,7 @@ private fun HomeScreenBody(
                             navController = navController,
                             outfitList = viewModel.outfitAccessoriesList,
                             outfitFavoriteList = viewModel.favoriteOutfitList,
+                            screenName = "accessories",
                         )
                     }
 
@@ -142,6 +162,7 @@ private fun HomeScreenBody(
                             navController = navController,
                             outfitList = viewModel.outfitHomeDecorList,
                             outfitFavoriteList = viewModel.favoriteOutfitList,
+                            screenName = "homedecor",
                         )
                     }
 
@@ -150,6 +171,7 @@ private fun HomeScreenBody(
                             navController = navController,
                             outfitList = viewModel.outfitSaleList,
                             outfitFavoriteList = viewModel.favoriteOutfitList,
+                            screenName = "sale",
                         )
                     }
                 }
@@ -168,7 +190,7 @@ private fun HomeScreenBody(
 
             SearchDisplay.Results -> {
                 LaunchedEffect(Unit) {
-                    delay(1500)
+                    delay(SEARCH_DELAY)
                     viewModel.updateSearchKeywords(state.query.text)
                 }
 
@@ -176,6 +198,8 @@ private fun HomeScreenBody(
                     navController = navController,
                     outfitList = viewModel.getSearchResults(state.query.text),
                     outfitFavoriteList = viewModel.favoriteOutfitList,
+                    screenName = "search_result",
+                    searchKeyword = state.query.text,
                 )
             }
         }
@@ -235,7 +259,7 @@ private fun CategoryTabs(
 }
 
 @Composable
-private fun UpdateTealiumHelper(
+private fun updateTealiumHelper(
     tealiumConfigState: RequestState<String>,
 ) {
     val context = LocalContext.current

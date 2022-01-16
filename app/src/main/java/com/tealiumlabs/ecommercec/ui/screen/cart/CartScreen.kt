@@ -1,5 +1,6 @@
 package com.tealiumlabs.ecommercec.ui.screen.cart
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +32,7 @@ import com.tealiumlabs.ecommercec.ui.navigation.moveToCheckoutScreen
 import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
 import com.tealiumlabs.ecommercec.model.EcommViewModel
 import com.tealiumlabs.ecommercec.model.OutfitCategory
+import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
 import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.screen.product.Up
@@ -40,6 +43,34 @@ fun CartScreen(
     viewModel: EcommViewModel,
     navController: NavController
 ) {
+    /////////// TEALIUM TRACKING /////////////
+    val cartProductId = mutableListOf<Long>()
+    val cartProductPrice = mutableListOf<Double>()
+
+    viewModel.cartAddedOutfitList.forEach { outfitInCart ->
+        cartProductId.add(outfitInCart.outfit.id)
+        cartProductPrice.add(outfitInCart.outfit.price)
+    }
+
+    LaunchedEffect(key1 = TealiumHelperList.currentInstanceName){
+        TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+
+            Log.d("KIYOSHI-TEALIUM-TRACKING", "cart")
+
+            tealiumHelper.trackView(
+                instanceName = TealiumHelperList.currentInstanceName!!,
+                name = "screen_view",
+                data = mutableMapOf(
+                    "screen_name" to "cart",
+                    "screen_type" to "cart",
+                    "cart_product_id" to cartProductId,
+                    "cart_product_price" to cartProductPrice,
+                )
+            )
+        }
+    }
+    //////////////////////////////////////////
+
     Scaffold(
         topBar = {
             GlobalTopAppBar(

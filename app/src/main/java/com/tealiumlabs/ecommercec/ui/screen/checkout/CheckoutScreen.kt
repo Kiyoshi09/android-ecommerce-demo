@@ -1,6 +1,7 @@
 package com.tealiumlabs.ecommercec.ui.screen.checkout
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -29,6 +30,7 @@ import com.tealiumlabs.ecommercec.model.OutfitInCart
 import com.tealiumlabs.ecommercec.ui.components.CustomTextField
 import com.tealiumlabs.ecommercec.ui.navigation.Screen
 import com.tealiumlabs.ecommercec.model.EcommViewModel
+import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
 import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.screen.product.Up
@@ -39,6 +41,24 @@ fun CheckoutScreen(
     viewModel: EcommViewModel,
     navController: NavController
 ) {
+    /////////// TEALIUM TRACKING /////////////
+    LaunchedEffect(key1 = TealiumHelperList.currentInstanceName){
+        TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+
+            Log.d("KIYOSHI-TEALIUM-TRACKING", "checkout")
+
+            tealiumHelper.trackView(
+                instanceName = TealiumHelperList.currentInstanceName!!,
+                name = "screen_view",
+                data = mutableMapOf(
+                    "screen_name" to "checkout",
+                    "screen_type" to "checkout",
+                )
+            )
+        }
+    }
+    //////////////////////////////////////////
+
     val checkoutInfo = remember {
         CheckoutInfo(
             billName = mutableStateOf("Benjamin Linus"),

@@ -1,5 +1,6 @@
 package com.tealiumlabs.ecommercec.ui.screen.favorite
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import com.tealiumlabs.ecommercec.R
 import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
 import com.tealiumlabs.ecommercec.model.EcommViewModel
+import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.GlobalTopAppBar
 import com.tealiumlabs.ecommercec.ui.components.OutfitImage
 import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
@@ -37,6 +39,24 @@ fun FavoriteScreen(
     viewModel: EcommViewModel,
     navController: NavController
 ) {
+    /////////// TEALIUM TRACKING /////////////
+    LaunchedEffect(key1 = TealiumHelperList.currentInstanceName){
+        TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+
+            Log.d("KIYOSHI-TEALIUM-TRACKING", "favorite")
+
+            tealiumHelper.trackView(
+                instanceName = TealiumHelperList.currentInstanceName!!,
+                name = "screen_view",
+                data = mutableMapOf(
+                    "screen_name" to "favorite",
+                    "screen_type" to "favorite",
+                )
+            )
+        }
+    }
+    //////////////////////////////////////////
+
     Scaffold(
         topBar = {
             GlobalTopAppBar(

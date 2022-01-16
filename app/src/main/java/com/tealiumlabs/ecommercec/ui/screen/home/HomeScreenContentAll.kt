@@ -1,5 +1,6 @@
 package com.tealiumlabs.ecommercec.ui.screen.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +31,7 @@ import com.tealiumlabs.ecommercec.model.Outfit
 import com.tealiumlabs.ecommercec.model.OutfitAd
 import com.tealiumlabs.ecommercec.model.OutfitCampaign
 import com.tealiumlabs.ecommercec.model.OutfitCategory
+import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.ECommcSurface
 import com.tealiumlabs.ecommercec.ui.components.OutfitImage
 import com.tealiumlabs.ecommercec.ui.navigation.moveToProductScreen
@@ -45,6 +48,24 @@ fun HomeScreenContentAll(
     outfitNewProductList: List<Outfit>,
     onChangeSelectedTab: (Int) -> Unit,
 ) {
+    /////////// TEALIUM TRACKING /////////////
+    LaunchedEffect(key1 = TealiumHelperList.currentInstanceName){
+        TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+
+            Log.d("KIYOSHI-TEALIUM-TRACKING", "home")
+
+            tealiumHelper.trackView(
+                instanceName = TealiumHelperList.currentInstanceName!!,
+                name = "screen_view",
+                data = mutableMapOf(
+                    "screen_name" to "all",
+                    "screen_type" to "home",
+                )
+            )
+        }
+    }
+    //////////////////////////////////////////
+
     val pageState = rememberPagerState()
 
     Box {

@@ -178,20 +178,96 @@ class EcommViewModel @Inject constructor(
 
     var emailAddress = mutableStateOf("")
 
-    val isOptIn = mutableStateOf(true)
-    val consentAnalytics = mutableStateOf(true)
-    val consentAffiliate = mutableStateOf(true)
-    val consentDisplayAd = mutableStateOf(true)
-    val consentSearch = mutableStateOf(true)
-    val consentEmail = mutableStateOf(true)
-    val consentPersonalization = mutableStateOf(true)
-    val consentSocial = mutableStateOf(true)
-    val consentBigData = mutableStateOf(true)
-    val consentMisc = mutableStateOf(true)
-    val consentCookieMatch = mutableStateOf(true)
-    val consentCDP = mutableStateOf(true)
-    val consentMobile = mutableStateOf(true)
-    val consentEngagement = mutableStateOf(true)
-    val consentMonitoring = mutableStateOf(true)
-    val consentCRM = mutableStateOf(true)
+    val isOptIn = mutableStateOf(false)
+    val consentAnalytics = mutableStateOf(false)
+    val consentAffiliate = mutableStateOf(false)
+    val consentDisplayAd = mutableStateOf(false)
+    val consentSearch = mutableStateOf(false)
+    val consentEmail = mutableStateOf(false)
+    val consentPersonalization = mutableStateOf(false)
+    val consentSocial = mutableStateOf(false)
+    val consentBigData = mutableStateOf(false)
+    val consentMisc = mutableStateOf(false)
+    val consentCookieMatch = mutableStateOf(false)
+    val consentCDP = mutableStateOf(false)
+    val consentMobile = mutableStateOf(false)
+    val consentEngagement = mutableStateOf(false)
+    val consentMonitoring = mutableStateOf(false)
+    val consentCRM = mutableStateOf(false)
+
+    fun updateConsentParameters(consent: Boolean, categories: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (consent) {
+                isOptIn.value = true
+
+                categories.forEach { category ->
+                    when(category) {
+                        "analytics" -> {
+                            consentAnalytics.value = true
+                        }
+                        "affiliates" -> {
+                            consentAffiliate.value = true
+                        }
+                        "display_ads" -> {
+                            consentDisplayAd.value = true
+                        }
+                        "search" -> {
+                            consentSearch.value = true
+                        }
+                        "email" -> {
+                            consentEmail.value = true
+                        }
+                        "personalization" -> {
+                            consentPersonalization.value = true
+                        }
+                        "social" -> {
+                            consentSocial.value = true
+                        }
+                        "big_data" -> {
+                            consentBigData.value = true
+                        }
+                        "misc" -> {
+                            consentMisc.value = true
+                        }
+                        "cookiematch" -> {
+                            consentCookieMatch.value = true
+                        }
+                        "cdp" -> {
+                            consentCDP.value = true
+                        }
+                        "mobile" -> {
+                            consentMobile.value = true
+                        }
+                        "engagement" -> {
+                            consentEngagement.value = true
+                        }
+                        "monitoring" -> {
+                            consentMonitoring.value = true
+                        }
+                        "crm" -> {
+                            consentCRM.value = true
+                        }
+                    }
+                }
+            } else {
+                isOptIn.value = false
+
+                consentAnalytics.value = false
+                consentAffiliate.value = false
+                consentDisplayAd.value = false
+                consentSearch.value = false
+                consentEmail.value = false
+                consentPersonalization.value = false
+                consentSocial.value = false
+                consentBigData.value = false
+                consentMisc.value = false
+                consentCookieMatch.value = false
+                consentCDP.value = false
+                consentMobile.value = false
+                consentEngagement.value = false
+                consentMonitoring.value = false
+                consentCRM.value = false
+            }
+        }
+    }
 }

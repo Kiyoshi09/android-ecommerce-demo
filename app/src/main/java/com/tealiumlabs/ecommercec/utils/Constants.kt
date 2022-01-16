@@ -6,4 +6,6 @@ object Constants {
 
     const val DEFAULT_SEARCH_KEYWORD1 = "sweater"
     const val DEFAULT_SEARCH_KEYWORD2 = "shirt"
+
+    const val SEARCH_DELAY = 1500L
 }
