@@ -82,6 +82,7 @@ fun ProductScreen(
                 navController = navController,
                 outfitsInCart = viewModel.cartAddedItemsTotalQty(),
                 emailAddress = viewModel.emailAddress,
+                traceId = viewModel.traceId,
             )
         },
         content = {

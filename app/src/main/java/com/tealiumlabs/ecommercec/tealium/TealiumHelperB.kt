@@ -7,6 +7,7 @@ import com.tealium.core.*
 import com.tealium.core.consent.*
 import com.tealium.core.events.EventTrigger
 import com.tealium.core.messaging.UserConsentPreferencesUpdatedListener
+import com.tealium.core.persistence.Expiry
 import com.tealium.core.validation.DispatchValidator
 import com.tealium.crashreporter.CrashReporter
 import com.tealium.dispatcher.Dispatch
@@ -91,7 +92,10 @@ class TealiumHelperB(
                     userConsentPreferences: UserConsentPreferences,
                     policy: ConsentManagementPolicy
                 ) {
-                    Log.d("KIYOSHI-CONSENT", "call onUserConsentPreferencesUpdated ${userConsentPreferences.consentStatus}")
+                    Log.d(
+                        "KIYOSHI-CONSENT",
+                        "call onUserConsentPreferencesUpdated ${userConsentPreferences.consentStatus}"
+                    )
 
                     if (userConsentPreferences.consentStatus == ConsentStatus.UNKNOWN) {
                         Logger.dev(BuildConfig.TAG, "Re-prompt for consent")
@@ -112,7 +116,10 @@ class TealiumHelperB(
 
     val webViewRemoteCommand = object : RemoteCommand("bgcolor", "testing Webview RCs") {
         override fun onInvoke(response: Response) {
-            Logger.dev(BuildConfig.TAG, "ResponsePayload for webView RemoteCommand ${response.requestPayload}")
+            Logger.dev(
+                BuildConfig.TAG,
+                "ResponsePayload for webView RemoteCommand ${response.requestPayload}"
+            )
         }
     }
 
@@ -125,19 +132,24 @@ class TealiumHelperB(
         }
     }
 
-    fun fetchConsentCategories(instanceName:String): String? {
+    fun fetchConsentCategories(instanceName: String): String? {
         return Tealium[instanceName]?.consentManager?.userConsentCategories?.joinToString(",")
     }
 
-    fun setConsentStatus(instanceName:String, status: ConsentStatus) {
+    fun setConsentStatus(instanceName: String, status: ConsentStatus) {
         Tealium[instanceName]?.consentManager?.userConsentStatus = status
     }
 
-    fun getConsentStatus(instanceName: String): Boolean {
-        return Tealium[instanceName]?.consentManager?.userConsentStatus == ConsentStatus.CONSENTED
+    fun getConsentStatus(instanceName: String): Int {
+
+        return when(Tealium[instanceName]?.consentManager?.userConsentStatus) {
+            ConsentStatus.CONSENTED -> 1
+            ConsentStatus.NOT_CONSENTED -> 0
+            else -> -1
+        }
     }
 
-    fun setConsentCategories(instanceName:String, categories: Set<ConsentCategory>) {
+    fun setConsentCategories(instanceName: String, categories: Set<ConsentCategory>) {
         Tealium[instanceName]?.consentManager?.userConsentCategories = categories
     }
 
@@ -146,14 +158,30 @@ class TealiumHelperB(
 //            ConsentCategory.consentCategories(categories)
 //    }
 
-    fun trackView(instanceName:String, name: String, data: Map<String, Any>?) {
+    fun trackView(instanceName: String, name: String, data: Map<String, Any>?) {
         val viewDispatch = TealiumView(name, data)
         Tealium[instanceName]?.track(viewDispatch)
     }
 
-    fun trackEvent(instanceName:String, name: String, data: Map<String, Any>?) {
+    fun trackEvent(instanceName: String, name: String, data: Map<String, Any>?) {
         val eventDispatch = TealiumEvent(name, data)
         Tealium[instanceName]?.track(eventDispatch)
+    }
+
+    fun joinTrace(instanceName: String, traceId: String) {
+        Tealium[instanceName]?.joinTrace(id = traceId)
+    }
+
+    fun leaveTrace(instanceName: String) {
+        Tealium[instanceName]?.leaveTrace()
+    }
+
+    fun setString2DataLayer(instanceName: String, key: String, value: String, expiry: Expiry = Expiry.SESSION) {
+        Tealium[instanceName]?.dataLayer?.putString(key = key, value = value, expiry = expiry)
+    }
+
+    fun removeFromDataLayer(instanceName: String, key: String) {
+        Tealium[instanceName]?.dataLayer?.remove(key = key)
     }
 
     val customValidator: DispatchValidator by lazy {

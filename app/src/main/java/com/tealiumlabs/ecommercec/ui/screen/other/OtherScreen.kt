@@ -44,6 +44,10 @@ import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.components.CustomTextField
 import com.tealiumlabs.ecommercec.ui.components.ScreenBottomBar
 import com.tealiumlabs.ecommercec.ui.theme.*
+import com.tealiumlabs.ecommercec.utils.Constants
+import com.tealiumlabs.ecommercec.utils.Constants.CONSENTED
+import com.tealiumlabs.ecommercec.utils.Constants.NOT_CONSENTED
+import com.tealiumlabs.ecommercec.utils.Constants.UNKNOWN_CONSENTED
 import com.tealiumlabs.ecommercec.utils.RequestState
 
 @Composable
@@ -297,7 +301,7 @@ fun ConsentMgrDialog(
 
     val dialogHeight = remember {
         mutableStateOf(
-            if (viewModel.isOptIn.value) {
+            if (viewModel.isOptIn.value == CONSENTED) {
                 height1
             } else {
                 height2
@@ -349,11 +353,11 @@ fun ConsentMgrDialog(
                         modifier = Modifier
                             .weight(2f)
                             .padding(top = 8.dp),
-                        checked = viewModel.isOptIn.value,
+                        checked = viewModel.isOptIn.value == CONSENTED,
                         onCheckedChange = {
-                            optInOut.value = it
+                            if(it) optInOut.value = CONSENTED else optInOut.value = UNKNOWN_CONSENTED
 
-                            if (optInOut.value) {
+                            if (optInOut.value == CONSENTED) {
                                 dialogHeight.value = height1
                             } else {
                                 dialogHeight.value = height2
@@ -362,7 +366,24 @@ fun ConsentMgrDialog(
                     )
                 }
 
-                if (optInOut.value) {
+                if (optInOut.value == CONSENTED) {
+                    if(cAnalytics.value == UNKNOWN_CONSENTED) cAnalytics.value = CONSENTED
+                    if(cAffiliate.value == UNKNOWN_CONSENTED) cAffiliate.value = CONSENTED
+                    if(cDisplayAd.value == UNKNOWN_CONSENTED) cDisplayAd.value = CONSENTED
+                    if(cSearch.value == UNKNOWN_CONSENTED) cSearch.value = CONSENTED
+                    if(cEmail.value == UNKNOWN_CONSENTED) cEmail.value = CONSENTED
+                    if(cPersonalization.value == UNKNOWN_CONSENTED) cPersonalization.value = CONSENTED
+                    if(cSocial.value == UNKNOWN_CONSENTED) cSocial.value = CONSENTED
+                    if(cBigData.value == UNKNOWN_CONSENTED) cBigData.value = CONSENTED
+                    if(cMisc.value == UNKNOWN_CONSENTED) cMisc.value = CONSENTED
+                    if(cCookieMatch.value == UNKNOWN_CONSENTED) cCookieMatch.value = CONSENTED
+                    if(cCdp.value == UNKNOWN_CONSENTED) cCdp.value = CONSENTED
+                    if(cMobile.value == UNKNOWN_CONSENTED) cMobile.value = CONSENTED
+                    if(cEngagement.value == UNKNOWN_CONSENTED) cEngagement.value = CONSENTED
+                    if(cMonitoring.value == UNKNOWN_CONSENTED) cMonitoring.value = CONSENTED
+                    if(cCrm.value == UNKNOWN_CONSENTED) cCrm.value = CONSENTED
+
+
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Column(
@@ -485,27 +506,29 @@ fun ConsentMgrDialog(
                             viewModel.consentCRM.value = cCrm.value
 
                             TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
-                                if (optInOut.value) {
+                                if (optInOut.value == CONSENTED) {
+
                                     tealiumHelper.setConsentStatus(
                                         instanceName = TealiumHelperList.currentInstanceName!!,
                                         status = ConsentStatus.CONSENTED,
                                     )
 
                                     val consentedCategories = mutableSetOf<ConsentCategory>()
-                                    if(cAnalytics.value) consentedCategories.add(ConsentCategory.ANALYTICS)
-                                    if(cAffiliate.value) consentedCategories.add(ConsentCategory.AFFILIATES)
-                                    if(cDisplayAd.value) consentedCategories.add(ConsentCategory.DISPLAY_ADS)
-                                    if(cSearch.value) consentedCategories.add(ConsentCategory.SEARCH)
-                                    if(cEmail.value) consentedCategories.add(ConsentCategory.EMAIL)
-                                    if(cPersonalization.value) consentedCategories.add(ConsentCategory.PERSONALIZATION)
-                                    if(cSocial.value) consentedCategories.add(ConsentCategory.SOCIAL)
-                                    if(cBigData.value) consentedCategories.add(ConsentCategory.BIG_DATA)
-                                    if(cMisc.value) consentedCategories.add(ConsentCategory.MISC)
-                                    if(cCdp.value) consentedCategories.add(ConsentCategory.CDP)
-                                    if(cMobile.value) consentedCategories.add(ConsentCategory.MOBILE)
-                                    if(cEngagement.value) consentedCategories.add(ConsentCategory.ENGAGEMENT)
-                                    if(cMonitoring.value) consentedCategories.add(ConsentCategory.MONITORING)
-                                    if(cCrm.value) consentedCategories.add(ConsentCategory.CRM)
+                                    if(cAnalytics.value == CONSENTED) consentedCategories.add(ConsentCategory.ANALYTICS)
+                                    if(cAffiliate.value == CONSENTED) consentedCategories.add(ConsentCategory.AFFILIATES)
+                                    if(cDisplayAd.value == CONSENTED) consentedCategories.add(ConsentCategory.DISPLAY_ADS)
+                                    if(cSearch.value == CONSENTED) consentedCategories.add(ConsentCategory.SEARCH)
+                                    if(cEmail.value == CONSENTED) consentedCategories.add(ConsentCategory.EMAIL)
+                                    if(cPersonalization.value == CONSENTED) consentedCategories.add(ConsentCategory.PERSONALIZATION)
+                                    if(cSocial.value == CONSENTED) consentedCategories.add(ConsentCategory.SOCIAL)
+                                    if(cBigData.value == CONSENTED) consentedCategories.add(ConsentCategory.BIG_DATA)
+                                    if(cMisc.value == CONSENTED) consentedCategories.add(ConsentCategory.MISC)
+                                    if(cCookieMatch.value == CONSENTED) consentedCategories.add(ConsentCategory.COOKIEMATCH)
+                                    if(cCdp.value == CONSENTED) consentedCategories.add(ConsentCategory.CDP)
+                                    if(cMobile.value == CONSENTED) consentedCategories.add(ConsentCategory.MOBILE)
+                                    if(cEngagement.value == CONSENTED) consentedCategories.add(ConsentCategory.ENGAGEMENT)
+                                    if(cMonitoring.value == CONSENTED) consentedCategories.add(ConsentCategory.MONITORING)
+                                    if(cCrm.value == CONSENTED) consentedCategories.add(ConsentCategory.CRM)
 
                                     tealiumHelper.setConsentCategories(
                                         instanceName = TealiumHelperList.currentInstanceName!!,
@@ -540,7 +563,7 @@ fun ConsentMgrDialog(
 @Composable
 private fun ConsentPreferenceCategory(
     categoryName: String,
-    uiStatus: MutableState<Boolean>,
+    uiStatus: MutableState<Int>,
 ) {
     Row(
         modifier = Modifier
@@ -559,9 +582,9 @@ private fun ConsentPreferenceCategory(
             modifier = Modifier
                 .weight(2f)
                 .padding(top = 8.dp),
-            checked = uiStatus.value,
+            checked = uiStatus.value == CONSENTED,
             onCheckedChange = {
-                uiStatus.value = it
+                uiStatus.value = if(it) CONSENTED else NOT_CONSENTED
             }
         )
     }

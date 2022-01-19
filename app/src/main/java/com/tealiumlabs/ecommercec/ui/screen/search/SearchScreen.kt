@@ -63,7 +63,8 @@ fun SearchScreen(
             GlobalTopAppBar(
                 navController = navController,
                 outfitsInCart = viewModel.cartAddedItemsTotalQty(),
-                emailAddress = viewModel.emailAddress
+                emailAddress = viewModel.emailAddress,
+                traceId = viewModel.traceId,
             )
         },
         content = {

@@ -7,8 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tealiumlabs.ecommercec.data.repositories.DataStoreRepository
 import com.tealiumlabs.ecommercec.data.repositories.OutfitRepository
+import com.tealiumlabs.ecommercec.utils.Constants.CONSENTED
 import com.tealiumlabs.ecommercec.utils.Constants.DEFAULT_SEARCH_KEYWORD1
 import com.tealiumlabs.ecommercec.utils.Constants.DEFAULT_SEARCH_KEYWORD2
+import com.tealiumlabs.ecommercec.utils.Constants.NOT_CONSENTED
+import com.tealiumlabs.ecommercec.utils.Constants.UNKNOWN_CONSENTED
 import com.tealiumlabs.ecommercec.utils.RequestState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -177,96 +180,114 @@ class EcommViewModel @Inject constructor(
     }
 
     var emailAddress = mutableStateOf("")
+    var traceId = mutableStateOf("")
 
-    val isOptIn = mutableStateOf(false)
-    val consentAnalytics = mutableStateOf(false)
-    val consentAffiliate = mutableStateOf(false)
-    val consentDisplayAd = mutableStateOf(false)
-    val consentSearch = mutableStateOf(false)
-    val consentEmail = mutableStateOf(false)
-    val consentPersonalization = mutableStateOf(false)
-    val consentSocial = mutableStateOf(false)
-    val consentBigData = mutableStateOf(false)
-    val consentMisc = mutableStateOf(false)
-    val consentCookieMatch = mutableStateOf(false)
-    val consentCDP = mutableStateOf(false)
-    val consentMobile = mutableStateOf(false)
-    val consentEngagement = mutableStateOf(false)
-    val consentMonitoring = mutableStateOf(false)
-    val consentCRM = mutableStateOf(false)
+    val isOptIn = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentAnalytics = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentAffiliate = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentDisplayAd = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentSearch = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentEmail = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentPersonalization = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentSocial = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentBigData = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentMisc = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentCookieMatch = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentCDP = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentMobile = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentEngagement = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentMonitoring = mutableStateOf(UNKNOWN_CONSENTED)
+    val consentCRM = mutableStateOf(UNKNOWN_CONSENTED)
 
-    fun updateConsentParameters(consent: Boolean, categories: List<String>) {
+    fun updateConsentParameters(consent: Int, categories: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (consent) {
-                isOptIn.value = true
+
+            if (consent == CONSENTED) {
+                isOptIn.value = CONSENTED
+
+                consentAnalytics.value = NOT_CONSENTED
+                consentAffiliate.value = NOT_CONSENTED
+                consentDisplayAd.value = NOT_CONSENTED
+                consentSearch.value = NOT_CONSENTED
+                consentEmail.value = NOT_CONSENTED
+                consentPersonalization.value = NOT_CONSENTED
+                consentSocial.value = NOT_CONSENTED
+                consentBigData.value = NOT_CONSENTED
+                consentMisc.value = NOT_CONSENTED
+                consentCookieMatch.value = NOT_CONSENTED
+                consentCDP.value = NOT_CONSENTED
+                consentMobile.value = NOT_CONSENTED
+                consentEngagement.value = NOT_CONSENTED
+                consentMonitoring.value = NOT_CONSENTED
+                consentCRM.value = NOT_CONSENTED
 
                 categories.forEach { category ->
                     when(category) {
                         "analytics" -> {
-                            consentAnalytics.value = true
+                            consentAnalytics.value = CONSENTED
                         }
                         "affiliates" -> {
-                            consentAffiliate.value = true
+                            consentAffiliate.value = CONSENTED
                         }
                         "display_ads" -> {
-                            consentDisplayAd.value = true
+                            consentDisplayAd.value = CONSENTED
                         }
                         "search" -> {
-                            consentSearch.value = true
+                            consentSearch.value = CONSENTED
                         }
                         "email" -> {
-                            consentEmail.value = true
+                            consentEmail.value = CONSENTED
                         }
                         "personalization" -> {
-                            consentPersonalization.value = true
+                            consentPersonalization.value = CONSENTED
                         }
                         "social" -> {
-                            consentSocial.value = true
+                            consentSocial.value = CONSENTED
                         }
                         "big_data" -> {
-                            consentBigData.value = true
+                            consentBigData.value = CONSENTED
                         }
                         "misc" -> {
-                            consentMisc.value = true
+                            consentMisc.value = CONSENTED
                         }
                         "cookiematch" -> {
-                            consentCookieMatch.value = true
+                            consentCookieMatch.value = CONSENTED
                         }
                         "cdp" -> {
-                            consentCDP.value = true
+                            consentCDP.value = CONSENTED
                         }
                         "mobile" -> {
-                            consentMobile.value = true
+                            consentMobile.value = CONSENTED
                         }
                         "engagement" -> {
-                            consentEngagement.value = true
+                            consentEngagement.value = CONSENTED
                         }
                         "monitoring" -> {
-                            consentMonitoring.value = true
+                            consentMonitoring.value = CONSENTED
                         }
                         "crm" -> {
-                            consentCRM.value = true
+                            consentCRM.value = CONSENTED
                         }
                     }
                 }
-            } else {
-                isOptIn.value = false
+            } else if (consent == NOT_CONSENTED) {
+                isOptIn.value = NOT_CONSENTED
 
-                consentAnalytics.value = false
-                consentAffiliate.value = false
-                consentDisplayAd.value = false
-                consentSearch.value = false
-                consentEmail.value = false
-                consentPersonalization.value = false
-                consentSocial.value = false
-                consentBigData.value = false
-                consentMisc.value = false
-                consentCookieMatch.value = false
-                consentCDP.value = false
-                consentMobile.value = false
-                consentEngagement.value = false
-                consentMonitoring.value = false
-                consentCRM.value = false
+                consentAnalytics.value = UNKNOWN_CONSENTED
+                consentAffiliate.value = UNKNOWN_CONSENTED
+                consentDisplayAd.value = UNKNOWN_CONSENTED
+                consentSearch.value = UNKNOWN_CONSENTED
+                consentEmail.value = UNKNOWN_CONSENTED
+                consentPersonalization.value = UNKNOWN_CONSENTED
+                consentSocial.value = UNKNOWN_CONSENTED
+                consentBigData.value = UNKNOWN_CONSENTED
+                consentMisc.value = UNKNOWN_CONSENTED
+                consentCookieMatch.value = UNKNOWN_CONSENTED
+                consentCDP.value = UNKNOWN_CONSENTED
+                consentMobile.value = UNKNOWN_CONSENTED
+                consentEngagement.value = UNKNOWN_CONSENTED
+                consentMonitoring.value = UNKNOWN_CONSENTED
+                consentCRM.value = UNKNOWN_CONSENTED
             }
         }
     }

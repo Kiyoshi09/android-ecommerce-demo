@@ -8,4 +8,8 @@ object Constants {
     const val DEFAULT_SEARCH_KEYWORD2 = "shirt"
 
     const val SEARCH_DELAY = 1500L
+
+    const val CONSENTED = 1
+    const val NOT_CONSENTED = 0
+    const val UNKNOWN_CONSENTED = -1
 }

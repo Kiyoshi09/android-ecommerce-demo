@@ -62,7 +62,8 @@ fun FavoriteScreen(
             GlobalTopAppBar(
                 navController = navController,
                 outfitsInCart = viewModel.cartAddedOutfitList.size,
-                emailAddress = viewModel.emailAddress
+                emailAddress = viewModel.emailAddress,
+                traceId = viewModel.traceId,
             )
         },
         content = {

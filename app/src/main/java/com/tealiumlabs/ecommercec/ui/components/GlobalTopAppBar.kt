@@ -25,9 +25,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.trace
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.tealiumlabs.ecommercec.R
+import com.tealiumlabs.ecommercec.tealium.TealiumHelperList
 import com.tealiumlabs.ecommercec.ui.navigation.Screen
 import com.tealiumlabs.ecommercec.ui.theme.EcommTypography
 import com.tealiumlabs.ecommercec.ui.theme.colorTextBodyLight
@@ -40,6 +42,7 @@ fun GlobalTopAppBar(
     navController: NavController,
     outfitsInCart: Int,
     emailAddress: MutableState<String>,
+    traceId: MutableState<String>,
 ) {
     Row(
         Modifier
@@ -95,6 +98,7 @@ fun GlobalTopAppBar(
                 LoginDialog(
                     openDialog = openDialog,
                     emailAddress = emailAddress,
+                    traceId = traceId,
                 )
             }
         }
@@ -135,11 +139,12 @@ fun GlobalTopAppBar(
 private fun LoginDialog(
     openDialog: MutableState<Boolean>,
     emailAddress: MutableState<String>,
+    traceId: MutableState<String>,
 ) {
     val emailVal = remember { mutableStateOf(emailAddress.value) }
     val passwordVal = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
-    val traceVal = remember { mutableStateOf("") }
+    val traceVal = remember { mutableStateOf(traceId.value) }
 
     val focusRequesters = List(4) { FocusRequester() }
 
@@ -206,6 +211,50 @@ private fun LoginDialog(
                     Button(
                         onClick = {
                             emailAddress.value = emailVal.value
+                            traceId.value = traceVal.value
+
+                            ///////// Tealium Data ////////////
+                            TealiumHelperList.currentTealiumHelper?.let { tealiumHelper ->
+
+                                if(emailVal.value.isEmpty()){
+                                    tealiumHelper.removeFromDataLayer(
+                                        instanceName = TealiumHelperList.currentInstanceName!!,
+                                        key = "email_address"
+                                    )
+                                }
+                                else{
+                                    tealiumHelper.setString2DataLayer(
+                                        instanceName = TealiumHelperList.currentInstanceName!!,
+                                        key = "email_address",
+                                        value = emailVal.value,
+                                    )
+                                }
+
+                                if(traceVal.value.isEmpty()){
+                                    tealiumHelper.setString2DataLayer(
+                                        instanceName = TealiumHelperList.currentInstanceName!!,
+                                        key = "tealium_trace_id",
+                                        value = emailVal.value,
+                                    )
+
+                                    tealiumHelper.leaveTrace(instanceName = TealiumHelperList.currentInstanceName!!)
+                                }
+                                else{
+                                    tealiumHelper.setString2DataLayer(
+                                        instanceName = TealiumHelperList.currentInstanceName!!,
+                                        key = "tealium_trace_id",
+                                        value = traceVal.value,
+                                    )
+                                }
+
+                                tealiumHelper.trackEvent(
+                                    instanceName = TealiumHelperList.currentInstanceName!!,
+                                    name = "login_event",
+                                    data = mapOf(),
+                                )
+                            }
+                            //////////////////////////////////
+
                             openDialog.value = false
                         },
                         modifier = Modifier
